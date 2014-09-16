@@ -7,4 +7,4 @@ $app = new App();
 $app->run();
 
 global $db;
-Util::prints($db->query('select * from admin'));
+//Util::prints($db->query('select * from admin');
