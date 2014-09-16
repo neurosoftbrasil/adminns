@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title>
+            Descrição básica da estrutura do sistema
+        </title>
+        <meta charset="utf-8"/>
+        <style type="text/css">
+            body {
+                padding:10px;
+                font: 11px Arial, Helvetica, sans-serif;
+                color:#333;
+            }
+            li {
+                margin:5px 10px;
+            }
+            b {
+                color:#093;
+            }
+            b.pasta {
+                color:#039;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>ADMINNS</h1>
+    <ul>
+        <li>Banco de dados: <b class="pasta">MySql - UTF8-bin</b></li>
+        <li><b class="pasta">App</b> // Pasta de aplicação
+            <ul>
+                <li><b>App.php</b> // Instanciada | Cria ambiente</li>
+                <li><b>Config.php</b> // Estatica | Configura variáveis da aplicação</li>
+            </ul>
+        </li>
+        <li><b class="pasta">Library</b> // Pasta de framework
+            <ul>
+                <li><b>Db.php</b> // Instanciada | Conecta ao banco pela configuração das variáveis de aplicação</li>
+                <li><b>Helper.php</b> // Estatica | funções de transformação de dados de Views</li>
+                <li><b>Util.php</b> // Estatica | funções de transformação de dados para Debug</li>
+            </ul>
+        </li>
+        <li><b>index.php</b> // Configura variáveis do framework</li>
+    </ul>
+    </body>
+</html>
