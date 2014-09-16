@@ -15,12 +15,12 @@ class Config {
         'dbname'=>'neurosoft',
         'port'=>3306
     );
-    private static $tokenKey = "|Neurosoft|SeñorChang|";
+    private static $tokenKey = "NeuroSoft|SeñorChang|";
     
     public static function db() {
         return (object) self::$db;
     }
-    public static function tokenKey() {
+    public static function getToken() {
         return self::$tokenKey;
     }
 }
