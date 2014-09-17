@@ -3,9 +3,9 @@
 ob_start(); // php streaming
 session_start(); // inicia sessao
 
-define('CONTROLLER_DIR','App/Controller');
-define('VIEW_DIR','Layout');
-define('MODEL_DIR','App/Model');
+define('APP_DIR','adminns/');
+define('CONTROLLER_DIR','App/Controller/');
+define('VIEW_DIR','Layout/');
 
 include('App/App.php');
 

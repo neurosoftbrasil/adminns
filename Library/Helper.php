@@ -22,4 +22,21 @@ class Helper {
     public static function controllerName($str) {
         return ucwords($str)."Controller";
     }
+    public static function css($str,$params) {
+        $cssPath = VIEW_DIR.Config::$cssPath."/".$str.".css";
+        echo "<link rel='stylesheet' type='text/css' href='/".APP_DIR.$cssPath."' ";
+        self::printParams($params);
+        echo "/>\n";
+    }
+    public static function javascript($str,$params) {
+        $jsPath = VIEW_DIR.Config::$jsPath."/".$str.".js";
+        echo "<script type='text/javascript' src='/".APP_DIR."$jsPath' ";
+        self::printParams($params);
+        echo "></script>\n";
+    }
+    public static function printParams($arr) {
+        foreach($arr as $key => $value) {
+            echo $key."='".$value."' ";
+        }
+    }
 }

@@ -22,5 +22,5 @@ RewriteRule ^([0-9a-zA-Z]+)/([0-9a-zA-Z]+)/?$ index.php?controller=$1&method=$2 
 RewriteRule ^([0-9a-zA-Z]+)/:(.+)?$ index.php?controller=$1&options=$2 [QSA,L]
 RewriteRule ^([0-9a-zA-Z]+)/?$ index.php?controller=$1&method=index [QSA,L]
 
-ErrorDocument 403 /cadastramento/403.html
-ErrorDocument 404 /cadastramento/404.html
+ErrorDocument 403 /adminns/home/index
+ErrorDocument 404 /adminns/home/index

@@ -7,6 +7,7 @@ include('Library/Request.php');
 include('Library/Helper.php');
 include('Library/Session.php');
 include('Library/Router.php');
+include('App/Controller/AppController.php');
 
 class App {
     public $db;

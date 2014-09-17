@@ -15,6 +15,11 @@ class Config {
         'dbname'=>'neurosoft',
         'port'=>3306
     );
+    public static $title = "Neurosoft";
+    public static $environment = "production";
+    public static $cssPath = "_StyleSheets";
+    public static $jsPath = "_JavaScripts";
+    
     private static $tokenKey = "NeuroSoft|SeñorChang|";
     
     public static function db() {

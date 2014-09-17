@@ -7,13 +7,15 @@ class Request {
 	public static function build() {
 		self::$get = (object) $_GET;
 		self::$post = (object) $_POST;
-
-		// pegando parametros via :(:+) ou ?(&+)
-		$options = self::$get;
+               
+                // pegando parametros via :(:+) ou ?(&+)
+		$options = clone self::$get;
+                
 		unset($options->controller);
 		unset($options->method);
 		unset($options->ident);
-		if(preg_match("/[:]/",$_SERVER['REDIRECT_URL'])) {
+                
+                if(preg_match("/[:]/",$_SERVER['REQUEST_URI'])) {
 			$opt = array();
 			$tmp = explode(":",$options->options);
 			foreach($tmp as $t) {
@@ -29,7 +31,7 @@ class Request {
 				}
 			}
 		}
-		self::$option = $options;
+		self::$option = empty((array) $options)?NULL:$options;
 	}
 
 	public static function get($str) {
