@@ -17,8 +17,6 @@ class Config {
     );
     public static $title = "Neurosoft";
     public static $environment = "production";
-    public static $cssPath = "_StyleSheets";
-    public static $jsPath = "_JavaScripts";
     
     private static $tokenKey = "NeuroSoft|SeñorChang|";
     

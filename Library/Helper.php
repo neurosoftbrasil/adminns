@@ -22,14 +22,14 @@ class Helper {
     public static function controllerName($str) {
         return ucwords($str)."Controller";
     }
-    public static function css($str,$params) {
-        $cssPath = VIEW_DIR.Config::$cssPath."/".$str.".css";
+    public static function css($str,$params=array()) {
+        $cssPath = VIEW_DIR."stylesheets/".$str.".css";
         echo "<link rel='stylesheet' type='text/css' href='/".APP_DIR.$cssPath."' ";
         self::printParams($params);
         echo "/>\n";
     }
-    public static function javascript($str,$params) {
-        $jsPath = VIEW_DIR.Config::$jsPath."/".$str.".js";
+    public static function js($str,$params=array()) {
+        $jsPath = VIEW_DIR."javascripts/".$str.".js";
         echo "<script type='text/javascript' src='/".APP_DIR."$jsPath' ";
         self::printParams($params);
         echo "></script>\n";
@@ -38,5 +38,8 @@ class Helper {
         foreach($arr as $key => $value) {
             echo $key."='".$value."' ";
         }
+    }
+    public static function link($str="") {
+        return "/".APP_DIR."$str";
     }
 }

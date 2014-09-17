@@ -20,4 +20,5 @@ class Controller {
             include(VIEW_DIR."footer.php");
         }
     }
+    public function index() {}
 }

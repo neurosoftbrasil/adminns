@@ -1,0 +1,31 @@
+.navbar {
+    margin-bottom:0px;
+}
+#content {
+    background: linear-gradient(to bottom, #31729a 0px, #428bca 3px, #31729a 99%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+    color:#fff;
+    padding:1px 20px 11px 20px;
+    min-height:535px;
+}
+#content section {
+    color:#333;
+}
+footer {
+    text-align:center;
+    display:block;
+    border-top: 2px solid #82b5f8;
+    padding:10px 20px;
+    color: #999;
+}
+.navbar-nav .logado {
+    display:block;
+    padding: 17px 10px 0;
+    position:absolute;
+    width:350px;
+    text-align: right;
+    right:5px;
+    top:40px;
+}
+.logado small {
+    color: #fff;
+}
