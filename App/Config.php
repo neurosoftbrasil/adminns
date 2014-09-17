@@ -20,6 +20,9 @@ class Config {
     public static function db() {
         return (object) self::$db;
     }
+    public static function email() {
+        return '';
+    }
     public static function getToken() {
         return self::$tokenKey;
     }

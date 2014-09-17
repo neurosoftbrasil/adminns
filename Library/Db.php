@@ -4,7 +4,7 @@ class Database {
     private $conn;
 
     public static function token($infos) {
-        $s = Config::getToken();
+        $s = Config::tokenKey();
         foreach($infos as $i) {
             $s .= sha1($i);
         }

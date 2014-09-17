@@ -19,4 +19,7 @@ class Helper {
         }
         return $date[2]."-".$date[1]."-".$date[0].$hour;
     }
+    public static function controllerName($str) {
+        return ucwords($str)."Controller";
+    }
 }

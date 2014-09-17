@@ -1,4 +1,12 @@
 <?php
+
+ob_start(); // php streaming
+session_start(); // inicia sessao
+
+define('CONTROLLER_DIR','App/Controller');
+define('VIEW_DIR','Layout');
+define('MODEL_DIR','App/Model');
+
 include('App/App.php');
 
 // Classe de Aplicação geral
@@ -7,4 +15,5 @@ $app = new App();
 $app->run();
 
 global $db;
-//Util::prints($db->query('select * from admin');
+
+// TESTES DE CODIGO:
