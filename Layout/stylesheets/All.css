@@ -1,5 +1,18 @@
+.navbar-brand {
+    height: 56px;
+    width:70px;
+    text-indent:-999em;
+    overflow:hidden;
+}
+header nav {
+    color: #f00;
+}
+header .container ul.nav {
+    padding:3px;
+}
 .navbar {
     margin-bottom:0px;
+    background:#f8f8f8;
 }
 #content {
     background: linear-gradient(to bottom, #f0f0f0 0px, #f8f8f8 3px) repeat scroll 0 0;
@@ -27,7 +40,7 @@ footer {
     top:40px;
 }
 .logado small {
-    color: #fff;
+    color: #666;
 }
 .bg-primary,.bg-success,.bg-info,.bg-warning,.bg-danger {
     display:block;
@@ -38,6 +51,15 @@ footer {
 .bg-danger {
     color:#b74d4d;
 }
+.bg-success {
+    color: #41722c;
+}
 .container {
     width:auto;
+}
+.nav > li > a {
+    border-radius:3px;
+}
+.nav > li > a:hover, .nav > li > a:focus {
+    background-color: #fff;
 }

@@ -29,7 +29,7 @@
                                 <a href="<?=Helper::link('suporte')?>">Suporte</a>
                             </li>
                         <? } ?>
-                        <? if(Session::hasPermission('usuario',Session::VISUALIZAR)) { ?>
+                        <? if(Session::hasPermission('usuario',Session::EXCLUIR)) { ?>
                             <li>
                                 <a href="<?=Helper::link('usuario')?>">Usuários</a>
                             </li>
@@ -41,12 +41,17 @@
                             <a href="<?=Helper::link('perfil')?>">Meu Perfil</a>
                         </li>
                         <li>
-                            <span class="logado"><small>Você está logado como <strong><?=$_SESSION['Neurosoft']['name']?></strong></small></span>
-                            <a href="<?=Helper::link('session/logout')?>" style="float:right">Sair</a>
+                            <span class="logado"><small>Você está logado como <strong><?=$_SESSION[Session::getId()]['name']?></strong></small></span>
+                            <a href="<?=Helper::link('login/logout')?>" style="float:right">Sair</a>
                         </li>
                     </ul>
                     <? } ?>
                 </nav>
             </div>
         </header>
+        <style type="text/css">
+            header .navbar-brand {
+                background:url("/<?=APP_DIR.VIEW_DIR."images/logo_".Config::$app.".png"?>");
+            }
+        </style>
         <div id="content" role="content">

@@ -3,7 +3,7 @@ class Request {
 	public static $get;
 	public static $post;
 	public static $option = NULL;
-
+        
 	public static function build() {
 		self::$get = (object) $_GET;
 		self::$post = (object) $_POST;
@@ -33,6 +33,20 @@ class Request {
 		}
 		self::$option = empty((array) $options)?NULL:$options;
 	}
+        public static function postEscaped() {
+            $bind = array();
+            foreach($_POST as $key => $value) {
+                $bind[$key] = mysql_real_escape_string($value);
+            }
+            return $bind;
+        }
+        public static function getEscaped() {
+            $bind = array();
+            foreach($_GET as $key => $value) {
+                $bind[$key] = mysql_real_escape_string($value);
+            }
+            return $bind;
+        }
 	public static function path() {
 		return $_SERVER['REQUEST_URI'];
 	}
@@ -40,7 +54,7 @@ class Request {
 		return isset(self::$get->{$str})?self::$get->{$str}:NULL;
 	}
 	public static function post($str) {
-		return isset(self::$get->{$str})?self::$get->{$str}:NULL;
+		return isset(self::$post->{$str})?self::$post->{$str}:NULL;
 	}
 	public static function getOptions() {
 		return isset(self::$option)?self::$option:NULL;

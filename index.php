@@ -1,9 +1,8 @@
 <?php
+date_default_timezone_set('America/Sao_Paulo');
 
 ob_start(); // php streaming
 session_start(); // inicia sessao
-
-$_SESSION["Neurosoft"]['name'] = "Márcio Oliveira";
 
 define('APP_DIR','adminns/');
 define('CONTROLLER_DIR','App/Controller/');

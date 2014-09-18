@@ -18,7 +18,7 @@ class Database {
         }
     }
     
-    public function query($str,$unique = false) {
+    public function query($str,$unique = false,$format=PDO::FETCH_ASSOC) {
         preg_match("/(insert)|(update)|(delete)|(select)/", strtolower($str),$operation);
         try {
             switch($operation[0]) {
@@ -26,9 +26,7 @@ class Database {
                     $res = array();
                     $stmt = $this->conn->prepare($str);
                     $stmt->execute();
-                    while($row = $stmt->fetch()) {
-                        array_push($res,$row);
-                    }
+                    $res = $stmt->fetchAll($format);
                     if($unique && count($res)==1) {
                         return $res[0];
                     }

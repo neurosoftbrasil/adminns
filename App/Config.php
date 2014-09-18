@@ -12,10 +12,13 @@ class Config {
         'host'=>'localhost',
         'user'=>'root',
         'passwd'=>'',
-        'dbname'=>'neurosoft',
+        'dbname'=>'adminns',
         'port'=>3306
     );
     public static $title = "Neurosoft";
+    
+    public static $app = "neurosoft";
+    
     public static $environment = "development";
     
     private static $tokenKey = "NeuroSoft|SeñorChang|";

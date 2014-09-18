@@ -4,13 +4,13 @@ class FormHelper {
 	private static $formName;
 	private static $validations = array();
 
-	const EMAIL = "^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$";
-	const NOT_EMPTY = "[^()]";
-	const ONLY_NUMBERS = "";
-	const IS_SELECTED = "^[1-9]\d*$";
-	const DATE = "[0-9]{2}\/[0-9]{2}\/[0-9]{4}";
-	const TIME = "[0-9]{2}\:[0-9]{2}";
-	const DATE_TIME = "[0-9]{2}\/[0-9]{2}\/[0-9]{4} [0-9]{2}\:[0-9]{2}";
+	const EMAIL = "/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/";
+	const NOT_EMPTY = "/[^()]/";
+	const ONLY_NUMBERS = "/\d+/";
+	const IS_SELECTED = "/^[1-9]\d*$/";
+	const DATE = "/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/";
+	const TIME = "/[0-9]{2}\:[0-9]{2}/";
+	const DATE_TIME = "/[0-9]{2}\/[0-9]{2}\/[0-9]{4} [0-9]{2}\:[0-9]{2}/";
 
 	public static function create($id="MyForm",$action="",$options=array()) {
 		self::$formName = $id;
@@ -23,10 +23,11 @@ class FormHelper {
     	$html .= '>'."\n";
     	echo $html;
 	}
-	public static function end() {
+	public static function end($hijackEnter = 'true') {
 		$html = '</form>'."\n".'</section>'."\n";
 		echo $html;
-		?>
+                if($hijackEnter) {
+                    ?>
 			<script type="text/javascript">
 				$(document).keypress(function(e) {
 					var key = e.which || e.keyCode;
@@ -35,7 +36,8 @@ class FormHelper {
 					}
 				});
 			</script>
-		<?
+                    <?
+                }
 	}
 	public static function input($idName, $label='',$value='',$options=array()) {
 		if(!isset(self::$formName)) {
@@ -142,7 +144,7 @@ class FormHelper {
 									}
 									if(isset($value['regex'])) {
 								?>
-									if(!$.trim($('#<?=$key?>').val()).match(/<?=$value['regex']?>/i)) {
+									if(!$.trim($('#<?=$key?>').val()).match(<?=$value['regex']?>i)) {
 										erros.push({
 											"field":"<?=$key?>",
 											"error":"<?=$value['message']?>"
@@ -158,7 +160,22 @@ class FormHelper {
 							$("#<?=self::$formName?>_message").html('').removeClass('bg-danger');
 
 							<? if(count(self::$validations)>0) {?> if(erros.length==0) { <?}?>
-								$.post("<?=$action?>",$("#<?=self::$formName?>").serialize(),function(data) {});
+								$.post("<?=$action?>",$("#<?=self::$formName?>").serialize(),function(data) {
+                                                                    var json = JSON.parse(data);
+                                                                    switch(json.status) {
+                                                                        case 'error':
+                                                                            $("#<?=self::$formName?>_message").addClass('bg-danger');
+                                                                            var html = json.details.length>1?"H&acute; erros no formul&aacute;rio.":json.message;
+                                                                            $("#<?=self::$formName?>_message").html(html);
+                                                                        break;
+                                                                        default:
+                                                                            $("#<?=self::$formName?>_message").html(json.message).addClass("bg-"+json.status);
+                                                                            if(json.redirect) {
+                                                                                location.href = json.redirect;
+                                                                            }
+                                                                        break;
+                                                                    }
+                                                                });
 							<? if(count(self::$validations)>0) {?> } else {
 								$("#"+erros[0].field).focus();
 								for(i=0;i<erros.length;i++) {
