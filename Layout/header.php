@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="pt-br">
     <head>
         <title><?= Config::$title; ?></title>
         <meta charset="utf8"/>
@@ -10,6 +11,7 @@
         <?= Helper::js("App"); ?>
     </head>
     <body>
+        <? if(Session::isLogged()) {?><span class="logado"><small>Você está logado como <strong><?=$_SESSION[Session::getId()]['name']?></strong></small></span><?}?>
         <header id="top" class="navbar navbar-static-top bs-docs-nav" role="banner">
             <div class="container">
                 <div class="navbar-header">
@@ -41,7 +43,6 @@
                             <a href="<?=Helper::link('perfil')?>">Meu Perfil</a>
                         </li>
                         <li>
-                            <span class="logado"><small>Você está logado como <strong><?=$_SESSION[Session::getId()]['name']?></strong></small></span>
                             <a href="<?=Helper::link('login/logout')?>" style="float:right">Sair</a>
                         </li>
                     </ul>

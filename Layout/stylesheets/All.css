@@ -30,7 +30,7 @@ footer {
     padding:10px 20px;
     color: #999;
 }
-.navbar-nav .logado {
+span.logado {
     display:block;
     padding: 17px 10px 0;
     position:absolute;
@@ -62,4 +62,12 @@ footer {
 }
 .nav > li > a:hover, .nav > li > a:focus {
     background-color: #fff;
+}
+.btn-modules {
+    width:100%;
+}
+@media screen and (min-width : 768px) {
+    .mobile {
+        display:none;
+    }
 }

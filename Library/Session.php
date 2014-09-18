@@ -23,16 +23,16 @@ class Session {
                 if(!self::$permissions) {
                     global $db;
                     $id = $_SESSION[Session::getId()]['id'];
-                    $query  = "select u.id,m.permission,um.level from user u, user_module um, module m where ";
-                    $query .= "u.id = um.user_id and m.id = um.module_id and u.id = $id";
+                    $query  = "select u.id,m.name,m.permission,um.level from user u, user_module um, module m where ";
+                    $query .= "u.id = um.user_id and m.id = um.module_id and u.id = $id order by m.id desc";
                     $perms = $db->query($query);
                     $tmp = array();
                     foreach($perms as $p) {
-                        $tmp[$p['permission']] = $p['level'];
+                        $tmp[$p['permission']] = array('level'=>$p['level'],'name'=>$p['name']);
                     }
                     self::$permissions = $tmp;
                 }
-                return isset(self::$permissions[$module]) && self::$permissions[$module] >= $level;
+                return isset(self::$permissions[$module]['level']) && self::$permissions[$module]['level'] >= $level;
 	}
 	public static function getId() {
 		return sha1(Config::getToken().date('Y-m-d'));
