@@ -25,19 +25,21 @@ class Helper {
     public static function css($str,$params=array()) {
         $cssPath = VIEW_DIR."stylesheets/".$str.".css";
         echo "<link rel='stylesheet' type='text/css' href='/".APP_DIR.$cssPath."' ";
-        self::printParams($params);
+        echo self::printParams($params);
         echo "/>\n";
     }
     public static function js($str,$params=array()) {
         $jsPath = VIEW_DIR."javascripts/".$str.".js";
         echo "<script type='text/javascript' src='/".APP_DIR."$jsPath' ";
-        self::printParams($params);
+        echo self::printParams($params);
         echo "></script>\n";
     }
     public static function printParams($arr) {
+        $html = "";
         foreach($arr as $key => $value) {
-            echo $key."='".$value."' ";
+            $html .= $key."='".$value."' ";
         }
+        return $html;
     }
     public static function link($str="") {
         return "/".APP_DIR."$str";

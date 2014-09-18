@@ -23,7 +23,6 @@ class Router {
         }
         $this->load();
     }
-    
     public function load() {
         $controllerName = ucwords(Helper::controllerName($this->route->controller));
         $controllerPath = CONTROLLER_DIR . $controllerName . ".php";

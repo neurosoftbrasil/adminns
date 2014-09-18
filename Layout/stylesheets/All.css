@@ -2,8 +2,8 @@
     margin-bottom:0px;
 }
 #content {
-    background: linear-gradient(to bottom, #31729a 0px, #428bca 3px, #31729a 99%) repeat scroll 0 0 rgba(0, 0, 0, 0);
-    color:#fff;
+    background: linear-gradient(to bottom, #f0f0f0 0px, #f8f8f8 3px) repeat scroll 0 0;
+    color:#999;
     padding:1px 20px 11px 20px;
     min-height:535px;
 }
@@ -28,4 +28,16 @@ footer {
 }
 .logado small {
     color: #fff;
+}
+.bg-primary,.bg-success,.bg-info,.bg-warning,.bg-danger {
+    display:block;
+    border-radius:3px;
+    margin:10px 0;
+    padding:5px 10px;
+}
+.bg-danger {
+    color:#b74d4d;
+}
+.container {
+    width:auto;
 }

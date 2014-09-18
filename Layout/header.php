@@ -22,14 +22,18 @@
                     <a class="navbar-brand" href="<?=Helper::link()?>">Neurosoft</a>
                 </div>
                 <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+                    <? if(Session::isLogged()) { // dependentes de login?>
                     <ul class="nav navbar-nav">
-                        <li class="active">
-                            <a href="<?=Helper::link('suporte')?>">Suporte</a>
-                        </li>
-                        
-                        <li>
-                            <a href="<?=Helper::link('usuario')?>">Usuários</a>
-                        </li>
+                        <? if(Session::hasPermission('suporte',Session::VISUALIZAR)) { ?>
+                            <li class="active">
+                                <a href="<?=Helper::link('suporte')?>">Suporte</a>
+                            </li>
+                        <? } ?>
+                        <? if(Session::hasPermission('usuario',Session::VISUALIZAR)) { ?>
+                            <li>
+                                <a href="<?=Helper::link('usuario')?>">Usuários</a>
+                            </li>
+                        <? } ?>
                     </ul>
                     
                     <ul class="nav navbar-nav navbar-right">
@@ -41,6 +45,7 @@
                             <a href="<?=Helper::link('session/logout')?>" style="float:right">Sair</a>
                         </li>
                     </ul>
+                    <? } ?>
                 </nav>
             </div>
         </header>

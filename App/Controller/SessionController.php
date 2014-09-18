@@ -2,9 +2,9 @@
 
 class SessionController extends AppController {
     public function logout() {
-        Router::redirect("login");
+    	Session::destroy();
     }
     public function login() {
-        Router::redirect("login");
+        Session::destroy();
     }
 }

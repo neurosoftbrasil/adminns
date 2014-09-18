@@ -33,7 +33,9 @@ class Request {
 		}
 		self::$option = empty((array) $options)?NULL:$options;
 	}
-
+	public static function path() {
+		return $_SERVER['REQUEST_URI'];
+	}
 	public static function get($str) {
 		return isset(self::$get->{$str})?self::$get->{$str}:NULL;
 	}

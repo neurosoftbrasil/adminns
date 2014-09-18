@@ -1,14 +1,24 @@
 <h1>Login</h1>
-<section>
-    <form role="form">
-        <div class="form-group">
-            <label for="email">E-mail</label>
-            <input type="text" id="usuario" name="email" class="form-control"/>
-        </div>
-        <div class="form-group">
-            <label for="senha">Senha</label>
-            <input type="password" id="usuario" name="senha" class="form-control"/>
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-    </form>
-</section>
+<?
+    FormHelper::create('loginForm');
+    FormHelper::input('email',"E-mail",NULL,array(
+        'placeholder'=>'Digite o seu e-mail',
+        'style'=>'max-width:400px',
+        'validation'=>array(
+            'regex'=>FormHelper::EMAIL,
+            'message'=>'Digite um <strong>E-mail</strong> válido.'
+        )
+    ));
+    FormHelper::password('password',"Senha",NULL,array(
+        'placeholder'=>'Digite o sua senha',
+        'style'=>'max-width:400px',
+        'validation'=>array(
+            'regex'=>FormHelper::NOT_EMPTY,
+            'message'=>'Digite uma <strong>Senha</strong> para logar.'
+        )
+    ));
+    FormHelper::startGroup();
+    FormHelper::submitAjax("Enviar","auth",array('class'=>'btn-primary'));
+    FormHelper::endGroup();
+    FormHelper::end();
+?>

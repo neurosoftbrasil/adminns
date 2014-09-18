@@ -16,7 +16,7 @@ class Config {
         'port'=>3306
     );
     public static $title = "Neurosoft";
-    public static $environment = "production";
+    public static $environment = "development";
     
     private static $tokenKey = "NeuroSoft|SeñorChang|";
     

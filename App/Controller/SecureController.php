@@ -2,11 +2,10 @@
 class SecureController extends AppController {
     public function __construct() {
         $token = Request::value('token');
-        if(isset($token) && Session::getUserByToken($token)) {
-            
-        } else {
-            //Session::destroy();
-            //Router::redirect('login');
+        $session_id = Session::getId();
+        if(!isset($_SESSION[$session_id]) || !isset($token) && !Session::getUserByToken($token)) {
+            Session::destroy();
+            Router::redirect('login');
         }
     }
 }
