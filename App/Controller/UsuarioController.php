@@ -1,15 +1,19 @@
 <?php
 class UsuarioController extends SecureController {
     public function index() {
-        //echo "Usuario/Index!";
+        
     }
-    public function inserir() {
-        //echo "Usuario/Inserir!";
+    public function editar() {
+        
     }
-    public function editar($id) {
-        //echo "Usuario/Editar!";
+    public function deletar() {
+        $id = Request::get('ident');
     }
-    public function deletar($id) {
-        //echo "Usuario/Deletar!";
-    }
+    public function salvar() {
+        $j = array();
+        $j['status'] = 'success';
+        $j['message'] = 'Usuário salvo com êxito.';
+        //$j['redirect'] = "";
+        echo json_encode($j);
+    } 
 }

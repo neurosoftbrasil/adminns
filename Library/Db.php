@@ -17,7 +17,20 @@ class Database {
             $this->conn = new PDO("mysql:host=$host;dbname=$dbname;port=$port", $user, $passwd,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
         }
     }
-    
+    public function tableInfo($str,$column) {
+        $query = "select * from information_schema.columns 
+where table = '".Config::db()->dbname."' TABLE_NAME = '".$str."' 
+AND COLUMN_NAME = '".$column."_id'";
+        $table = $this->query($query);
+        return count($table)>0;
+    }
+    public function getResult($table,$fields="*",$conditions=false,$unique=false) {
+        $query = "select $fields from $table ";
+        if($conditions) {
+            $query .= "where ".$conditions;
+        }
+        return $this->query($query,$unique);
+    }
     public function query($str,$unique = false,$format=PDO::FETCH_ASSOC) {
         preg_match("/(insert)|(update)|(delete)|(select)/", strtolower($str),$operation);
         try {

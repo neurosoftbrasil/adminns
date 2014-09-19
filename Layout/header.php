@@ -3,6 +3,7 @@
     <head>
         <title><?= Config::$title; ?></title>
         <meta charset="utf8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <?= Helper::css("bootstrap.min", array('media' => 'all')); ?>
         <?= Helper::css("bootstrap-theme.min", array('media' => 'all')); ?>
         <?= Helper::css("All", array('media' => 'all')); ?>
@@ -43,7 +44,7 @@
                             <a href="<?=Helper::link('perfil')?>">Meu Perfil</a>
                         </li>
                         <li>
-                            <a href="<?=Helper::link('login/logout')?>" style="float:right">Sair</a>
+                            <a href="<?=Helper::link('login/logout')?>" class="btn-sair">Sair</a>
                         </li>
                     </ul>
                     <? } ?>
