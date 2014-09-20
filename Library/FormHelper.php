@@ -44,17 +44,17 @@ class FormHelper {
 
     public static function checkbox($idName, $label = '', $fields = array()) {
         ?><div class="checkbox <?= $idName ?>_group"><?
-                if (count($fields) == 0) {
+                if (gettype($fields)=='string') {
                     ?><label>
-                    <input type="checkbox" id="<?= $idName ?>" name="<?= $idName ?>"/>
+                    <input type="checkbox" id="<?= $idName ?>" name="<?= $idName ?>" <?=$fields=="1"?"checked":"";?>/>
             <?= $label ?>
                 </label><?
-                } else {
+                } else if(count($fields)>0) {
                     foreach ($fields as $key => $label) {
                         ?><label>
                             <input type="checkbox" id="<?= $key ?>" name="<?= $key ?>"/>
                         <?= $label ?>
-                        </label><?
+                    </label><?
                 }
         }
         ?></div><?
@@ -229,35 +229,14 @@ class FormHelper {
                 )
         );
     }
-    public static function select($fields,$thisController=NULL,$column=NULL) {
-        if(!$controller) {
-            $controller = Request::get('controller');
-        }
-        if(gettype($fields)=='string') {
-            global $db;
-            $table = $fields;
-            $hasMany = $db->tableInfo($controller,$fields);
-            $belongsToMany = $db->tableInfo($fields,$controller);
-            
-            if(!$hasMany && !$belongsToMany) {
-                $jointable = $controller."_".$table;
-                $query = "select * from $table";
-                $modules = $db->query($query);
-                $options = array();
-                if($additionalColumn) {
-                   $col = array_keys($additionalColumn);
-                   ?><select id="<?=$fields?>" name="<?=$fields?>|<?=$jointable?>|<?=$col[0]?>"><?
-                        foreach($modules as $m) {
-                            
-                        }
-                   ?></select><?
-                } else {
-                   ?><?  // excecao
-                }
-            }
-        } else {
-            
-        }
+    public static function select($idName, $label, $value, $options) {
+        ?>
+            <select id="" name="">
+                <? for($i=0;$i<count($options);$i++){?>
+                    <option value="<?=$i?>" <?=$value==$i?" selected":""?>><?=$options[$i]?></option>
+                <? } ?>
+            </select>
+        <?
     }
     public static function startGroup($options = array()) {
         $html = '<div class="form-group ';

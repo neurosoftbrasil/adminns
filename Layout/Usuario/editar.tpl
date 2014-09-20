@@ -20,19 +20,44 @@
             'message'=>'Digite um <strong>E-mail</strong> válido.'
         )
     ));
-    FormHelper::checkbox('active',"Ativo");
-    ?><h4>Permissões</h4><?
-    FormHelper::select('module','user',array(
-        'level'=>array(
-            'Nenhum',
-            'Visualizar',
-            'Inserir',
-            'Editar',
-            'Excluir'
-         )
-    ));
+    FormHelper::checkbox('active',"Ativo",$u['active']);
+    
+    // ligação many to many para user_module
+    
+    $options = array('Nenhum','Visualizar','Incluir','Editar','Excluir');
+    
+    
+    ?><h4>Permissões</h4>
+    <div class="form-group <?=$m['permission']?>_group">
+        <?
+        $modules = $db->query('select id,name,permission from module');
+        $levels = $db->query("select level from user_module where user_id=".$u['id']);
+        $counter = 0;
+        foreach($modules as $m) {
+            ?>
+                
+                    <label for="user_module-<?=$m['id']?>" style="width:150px"><h5><?=$m['name']?></h5></label>
+                    <select id="user_module-<?=$m['id']?>" name="user_module-<?=$m['id']?>">
+                        <?
+                            for($i=0;$i<count($options);$i++) {
+                                ?>
+                                    <option value="user_id=<?=$u['id']?>&module_id=<?=$m['id']?>&level=<?=$i?>" <?=$levels[$counter]['level']==$i?"selected":"";?>><?=$options[$i]?></option>
+                                <?
+                            }
+                        ?>
+                    </select><br/>
+                
+            <?
+            $counter++;
+        }
+        
+    ?>
+    </div>
+    <?
+    
+    
     FormHelper::startGroup();
-    FormHelper::submitAjax("Salvar","salvar",array('class'=>'btn-primary'));
+    FormHelper::submitAjax("Salvar","salvar/".$u['id'],array('class'=>'btn-primary'));
     FormHelper::endGroup();
     
     FormHelper::end();
