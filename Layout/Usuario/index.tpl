@@ -1,4 +1,18 @@
-<h1>Usuários</h1>
+<? Helper::js('App.Usuario'); ?>
+<div class="title">
+
+    <span class="align-right">
+        <button id="novoUsuario"
+                class="btn btn-default"
+                style="margin:6px"
+                onclick="javascript:location.href = '<?=' / '.APP_DIR.'usuario / inserir'?>'"
+                >
+            <span class="glyphicon glyphicon-plus"></span>
+            Novo Usuário
+        </button>
+    </span>
+    <h1 class="half">Usuários</h1>
+</div>
 <div class="panel panel-default">
     <table class="table">
         <thead>
@@ -15,7 +29,7 @@
             <?
             global $db;
 
-            $users = $db->getResult('user','*','id<>'.$_SESSION[Session::getId()]['id']);
+            $users = $db->getResult('user','*','id<>'.Session::get('id').' and deleted=0');
 
             if(count($users)==0) {
             ?>
@@ -32,15 +46,33 @@
                 <td class="mobile-half"><?=$u['email']?></td>
                 <td><?=$u['active']==1?"Sim":"Não";?></td>
                 <td class="mobile"><?=Helper::timestampToDate($u['lastlogin'])?></td>
-                <td><button type="button" class="btn btn-default btn-sm" onclick="location.href='<?=Helper::link('usuario/editar/'.$u['id'])?>'">
+                <td><button type="button" class="btn btn-default btn-sm" onclick="location.href = '<?=Helper::link('usuario/editar/'.$u['id'])?>'">
                         <span class="glyphicon glyphicon-pencil"></span>
                         Editar
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm" onclick="App.Usuario.resetarSenha('<?=$u["name"]?>',<?=$u["id"]?>)">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        Resetar senha
                     </button>
                 </td>
             </tr>
             <?
             }
             }?>
+        <script type="text/javascript">
+                                    App.Usuario.resetarSenha = function(nome, id) {
+                            if (App.Modal.Show("Resetar senha", 'Deseja realmente resetar a senha de <strong>' + nome + '</strong> para "neurosoft"?', "Resetar senha", function() {
+                            location.href = '<?="/".APP_DIR."usuario/resetarsenha/"?>' + id;
+                            }));
+                            }
+        </script>
         </tbody>
     </table>
 </div>
+<script type="text/javascript">
+    App.Usuario.resetarSenha = function(nome, id) {
+        if (App.Modal.Show("Resetar senha", 'Deseja realmente resetar a senha de <strong>' + nome + '</strong> para "neurosoft"?', "Resetar senha", function() {
+            location.href = '<?="/".APP_DIR."usuario/resetarsenha/"?>' + id;
+        }));
+    }
+</script>

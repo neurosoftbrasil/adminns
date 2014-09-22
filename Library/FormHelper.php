@@ -40,8 +40,22 @@ class FormHelper {
             </script>
             <?
         }
+        echo '<p id="' . self::$formName . '_message"></p>';
     }
-
+    public static function button($id, $label = "Enviar",$path = "", $options = array()) {
+        
+        $html  = "<button type='button' class='";
+        if(isset($options['class'])) {
+            $html .= "btn ".$options['class']." ";
+            unset($options['class']);
+        } else {
+            $html .= "btn btn-default ";
+        }
+        $html .= "' ";
+        $html .= Helper::printParams($options);
+        $html .= ">$label</button>";
+        echo $html;
+    }
     public static function checkbox($idName, $label = '', $fields = array()) {
         ?><div class="checkbox <?= $idName ?>_group"><?
                 if (gettype($fields)=='string') {
@@ -218,7 +232,6 @@ class FormHelper {
             <?
         }
         echo $html;
-        echo '<p id="' . self::$formName . '_message"></p>';
     }
 
     public static function submitAjax($label, $action, $options = array()) {

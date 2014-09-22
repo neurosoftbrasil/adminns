@@ -106,3 +106,9 @@ span.logado {
         display:none;
     }
 }
+h1.half {
+    width:50%;
+}
+.align-right {
+    float:right;
+}

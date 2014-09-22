@@ -12,7 +12,7 @@
         <?= Helper::js("App"); ?>
     </head>
     <body>
-        <? if(Session::isLogged()) {?><span class="logado"><small>Você está logado como <strong><?=$_SESSION[Session::getId()]['name']?></strong></small></span><?}?>
+        <? if(Session::isLogged()) {?><span class="logado"><small>Você está logado como <strong><?=Session::get('name')?></strong></small></span><?}?>
         <header id="top" class="navbar navbar-static-top bs-docs-nav" role="banner">
             <div class="container">
                 <div class="navbar-header">

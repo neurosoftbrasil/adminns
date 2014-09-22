@@ -6,7 +6,11 @@ class Session {
 	const EXCLUIR = 4;
         
         public static $permissions;
-
+        
+        public static function get($str) {
+            $prop = $_SESSION[self::getId()][$str];
+            return isset($prop)?$prop:false;
+        }
 	public static function password($str) {
 		return sha1(Config::getToken().md5($str));
 	}
@@ -24,7 +28,7 @@ class Session {
                     global $db;
                     $id = $_SESSION[Session::getId()]['id'];
                     $query  = "select u.id,m.name,m.permission,um.level from user u, user_module um, module m where ";
-                    $query .= "u.id = um.user_id and m.id = um.module_id and u.id = $id order by m.id desc";
+                    $query .= "u.id = um.user_id and m.id = um.module_id and u.id = $id and u.deleted=0 order by m.id desc";
                     $perms = $db->query($query);
                     $tmp = array();
                     foreach($perms as $p) {
@@ -45,7 +49,7 @@ class Session {
 	}
 	public static function getUserByToken($str) {
 		global $db;
-                $query = "select id,email,name,active from user where token='$str' and active=1";
+                $query = "select id,email,name,active from user where token='$str' and active=1 and deleted=0";
                 return count($db->query($query,true))>0;
 	}
 }

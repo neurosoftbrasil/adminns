@@ -1,8 +1,14 @@
+<? Helper::js('App.Usuario'); ?>
 <h1>Editar usuário</h1>
 <?
     global $db;
+    $id = Request::get('ident');
+    if($id) {
+        $u = $db->getResult('user','*','id='.$id,true);
+    } else {
+        $u = array("name"=>"","email"=>"","active"=>"","id"=>0);
+    }
     
-    $u = $db->getResult('user','*','id='.Request::get('ident'),true);
     FormHelper::create('formUsuario');
     FormHelper::input('name', "Nome",$u['name'],array(
         'placeholder'=>'Digite o nome',
@@ -26,12 +32,16 @@
     
     $options = array('Nenhum','Visualizar','Incluir','Editar','Excluir');
     
-    
+    if($id) {
     ?><h4>Permissões</h4>
     <div class="form-group <?=$m['permission']?>_group">
         <?
         $modules = $db->query('select id,name,permission from module');
         $levels = $db->query("select level from user_module where user_id=".$u['id']);
+        if(count($levels)==0) {
+            $levels = array();
+            foreach($modules as $m) { array_push($levels,0); }
+        }
         $counter = 0;
         foreach($modules as $m) {
             ?>
@@ -54,10 +64,23 @@
     ?>
     </div>
     <?
-    
-    
+  
+    }
     FormHelper::startGroup();
     FormHelper::submitAjax("Salvar","salvar/".$u['id'],array('class'=>'btn-primary'));
+    FormHelper::button("excluir","Excluir","/".APP_DIR."service/excluir/".$u['id'],array(
+        'class'=>'btn-danger',
+        'onclick'=>'App.Usuario.Excluir("'.$u["name"].'",'.$u['id'].")"
+    ));
     FormHelper::endGroup();
     
     FormHelper::end();
+    
+    ?>
+    <script type="text/javascript">
+        App.Usuario.Excluir = function(nome, id) {
+            if (App.Modal.Show("Excluir usuário", 'Deseja realmente excluir o usuário <strong>' + nome + '</strong>?', "Excluir", function() {
+                location.href = '<?="/".APP_DIR."service/usuario/excluir/"?>' + id;
+            }));
+        }
+    </script>
