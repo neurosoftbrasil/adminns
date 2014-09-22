@@ -31,7 +31,8 @@ class LoginController extends AppController {
                 global $db;
                 $session_id = Session::getId();
                 $passwd = Session::password($passwd);
-                $query = "select id,name,email,token from user where email='$email' and password='$passwd' and active=1";
+                $query = "select id,name,email,token from user where email='$email' and password='$passwd' and active=1 and deleted=0";
+               
                 $user = $db->query($query,true,PDO::FETCH_CLASS);
                 if(count($user)>0) {
                     $session = array(

@@ -1,19 +1,56 @@
 <?php
 class UsuarioController extends SecureController {
     public function index() {
-        
+        Helper::js('App.Usuario');
+        if(!Session::hasPermission('usuario',Session::EXCLUIR)) Router::redirect('home');
     }
     public function editar() {
+        if(!Session::hasPermission('usuario',Session::EXCLUIR)) Router::redirect('home');
+    }
+    public function inserir() {
+        if(!Session::hasPermission('usuario',Session::EXCLUIR)) Router::redirect('home');
+    }
+    public function resetarsenha() {
+        if(!Session::hasPermission('usuario',Session::EXCLUIR)) Router::redirect('home');
+        
+        $ident = Request::get('ident');
+        global $db;
+        $query = "update user set password='".Session::password("neurosoft")."',token='".Session::token("neurosoft")."' where id=".$ident;
+        $db->query($query);
+        Router::redirect("usuario");
+    }
+    public function perfil() {
+        global $db;
+        
         
     }
-    public function deletar() {
+    public function excluir() {
+        if(!Session::hasPermission('usuario',Session::EXCLUIR)) Router::redirect('home');
+        
         $id = Request::get('ident');
+        global $db;
+        $db->query("update user set active=0,deleted=1 where id=".$id);
+        Router::redirect('usuario');
     }
     public function salvar() {
+        if(!Session::hasPermission('usuario',Session::EXCLUIR)) Router::redirect('home');
+        
         $cols = array();
         $values = array();
         $ident = Request::get('ident');
+        $ident = $ident=="0"?false:$ident;
+        $j = array(); // resposta
+        
         global $db;
+        
+        $exists = $db->query("select * from user where email='".Request::post('email')."'");
+        
+        if(!$ident && count($exists)>0) {
+            $j['status'] = 'danger';
+            $j['message'] = 'O usuário já existe';
+            echo json_encode($j);
+            return;
+        }
         
         foreach($_POST as $key=>$value) {
             if($key == 'active') {
@@ -45,6 +82,16 @@ class UsuarioController extends SecureController {
             array_push($cols,'active');
             array_push($values,0);
         }
+        
+        if(!$ident) {
+            // neurosoft
+            array_push($cols,"password");
+            array_push($values,Session::password("neurosoft"));
+            // neurosoft
+            array_push($cols,"token");
+            array_push($values,Session::token("neurosoft"));
+        }
+        
         if($ident) {
             $query  = "update user set ";
             $sets = array();
@@ -56,16 +103,38 @@ class UsuarioController extends SecureController {
             $query = "insert into user (".implode(",",$cols).") values ('".implode("','",$values)."');";
         }
         $result = $db->query($query);
+        
         if($result) {
-            $j = array();
+            
             $j['status'] = 'success';
             $j['message'] = 'Usuário salvo com êxito.';
-            $j['redirect'] = "/".APP_DIR."usuario/";
+            
+            $returningId = $ident?"":"editar/".$result;
+            
+            $j['redirect'] = "/".APP_DIR."usuario/".$returningId;
         } else {
-            $j = array();
             $j['status'] = 'danger';
             $j['message'] = 'O sistema não pode salvar o usuário. Contate o administrador.';
         }
         echo json_encode($j);
     } 
+    public function layout() {
+        if(!Request::get('service')) {
+            include(VIEW_DIR."header.php");
+            echo "\n";
+        } else {
+            if(Config::$environment=='production') {
+                header('Content-Type: application/json');
+            }
+        }
+        $page = Request::get('method')=="inserir"?"editar":Request::get('method');
+        $path = VIEW_DIR.ucwords(Request::get('controller'))."/".$page.".tpl";
+        
+        if(file_exists($path)) {
+            include($path);
+        }
+        if(!Request::get('service')) {
+            include(VIEW_DIR."footer.php");
+        }
+    }
 }
