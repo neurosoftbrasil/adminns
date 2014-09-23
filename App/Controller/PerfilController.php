@@ -69,7 +69,7 @@ class PerfilController extends SecureController {
             array_push($cols,"email='".$email."'");
             if(isset($novasenha)) {
                 array_push($cols,"password='".Session::password($novasenha)."'");
-                array_push($cols,"token='".Session::token($novasenha)."'");
+                array_push($cols,"token='".Session::token($email.$novasenha)."'");
             }
             
             $query = "update user set ".implode($cols,",")." where id=".$id;

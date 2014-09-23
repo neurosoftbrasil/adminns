@@ -15,7 +15,8 @@ class UsuarioController extends SecureController {
         
         $ident = Request::get('ident');
         global $db;
-        $query = "update user set password='".Session::password("neurosoft")."',token='".Session::token("neurosoft")."' where id=".$ident;
+        $u = $db->query("select email from user where id=".$ident,true);
+        $query = "update user set password='".Session::password("neurosoft")."',token='".Session::token($u['email']."neurosoft")."' where id=".$ident;
         $db->query($query);
         Router::redirect("usuario");
     }
@@ -43,7 +44,7 @@ class UsuarioController extends SecureController {
         
         global $db;
         
-        $exists = $db->query("select * from user where email='".Request::post('email')."'");
+        $exists = $db->query("select * from user where email='".Request::post('email')."'",true);
         
         if(!$ident && count($exists)>0) {
             $j['status'] = 'danger';
@@ -89,7 +90,7 @@ class UsuarioController extends SecureController {
             array_push($values,Session::password("neurosoft"));
             // neurosoft
             array_push($cols,"token");
-            array_push($values,Session::token("neurosoft"));
+            array_push($values,Session::token(Request::post('email')."neurosoft"));
         }
         
         if($ident) {
