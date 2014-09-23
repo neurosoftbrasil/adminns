@@ -2,6 +2,9 @@
 
 class LoginController extends AppController {
     public function index() {
+        if(Session::isLogged()) {
+            Router::redirect('home');
+        }
     }
     
     public function logout() {

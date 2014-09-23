@@ -56,7 +56,9 @@ class Session {
     public static function getUserByToken($str) {
         global $db;
         $query = "select id,email,name,token,active from user where token='$str' and active=1 and deleted=0";
+        
         $u = $db->query($query, true);
+        
         if (count($u) > 0) {
             $u = (object) $u;
             $session = array(
