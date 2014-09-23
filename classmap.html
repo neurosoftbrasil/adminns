@@ -23,25 +23,55 @@
     </head>
     <body>
         <h1>ADMINNS</h1>
-    <ul>
-        <li>Banco de dados: <b class="pasta">MySql - UTF8-bin</b></li>
-        <li><b class="pasta">App</b> // Pasta de aplicação
-            <ul>
-                <li><b>App.php</b> // Instanciada | Cria ambiente</li>
-                <li><b>Config.php</b> // Estatica | Configura variáveis da aplicação</li>
-            </ul>
-        </li>
-        <li><b class="pasta">Library</b> // Pasta de framework
-            <ul>
-                <li><b>Db.php</b> // Instanciada | Conecta ao banco pela configuração das variáveis de aplicação</li>
-                <li><b>Helper.php</b> // Estatica | funções de transformação de dados de Views</li>
-                <li><b>Util.php</b> // Estatica | funções de transformação de dados para Debug</li>
-                <li><b>Session.php</b> // Estatica | Funções de autenticação e autorização</li>
-                <li><b>Request.php</b> // Estatica | Funções de manipulação de url</li>
-                <li><b>Router.php</b> // Instanciada | Funções de redirecionamento de páginas via REST</li>
-            </ul>
-        </li>
-        <li><b>index.php</b> // Configura variáveis do framework</li>
-    </ul>
+        <ul>
+            <li>Banco de dados: <b class="pasta">MySql - UTF8-bin</b></li>
+            <li><b class="pasta">App</b> // Pasta de aplicação
+                <ul>
+                    <li><b>App.php</b> // Instanciada | Cria ambiente</li>
+                    <li><b>Config.php</b> // Estatica | Configura variáveis da aplicação</li>
+                    <li>
+                        <b class="pasta">Controller</b>
+                        <ul>
+                            <li><b>HelpController.php</b> // Instanciada | Controller de funções de ajuda simples.</li>
+                            <li><b>HomeController.php</b> // Instanciada | Controller da página Home</li>
+                            <li><b>LoginController.php</b> // Instanciada | Controller das páginas de Login</li>
+                            <li><b>PerfilController.php</b> // Instanciada | Controller da página de perfil</li>
+                            <li><b>SecureController.php</b> // Instanciada | Controller seguro extendido do controller Library/Controller.php. Valida se há usuário logado.</li>
+                            <li><b>SuporteController.php</b> // Instanciada | Controller do módulo de suporte</li>
+                            <li><b>UsuarioController.php</b> // Instanciada | Controller do módulo de controle de usuários</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li><b class="pasta">Library</b> // Pasta de framework
+                <ul>
+                    <li><b>Db.php</b> // Instanciada | Conecta ao banco pela configuração das variáveis de aplicação</li>
+                    <li><b>Helper.php</b> // Estatica | funções de transformação de dados de Views</li>
+                    <li><b>Util.php</b> // Estatica | funções de transformação de dados para Debug</li>
+                    <li><b>Session.php</b> // Estatica | Funções de autenticação e autorização</li>
+                    <li><b>Request.php</b> // Estatica | Funções de manipulação de url</li>
+                    <li><b>Router.php</b> // Instanciada | Funções de redirecionamento de páginas via REST</li>
+                    <li><b>FormHelper.php</b> // Estatica | Helper de impressão de formulários</li>
+                </ul>
+            </li>
+            <li><b class="pasta">Layout</b> // Pasta de layout e temas
+                <ul>
+                    <li><b>header.php</b> // Include | Cabeçalho da template.</li>
+                    <li><b>footer.php</b> // Include | Rodapé da template.</li>
+                    <li><b>fonts</b> // Anexo | Fontes do Bootstrap Framework.</li>
+                    <li><b>images</b> // Anexo | Diretório de imagens.</li>
+                    <li><b>javascript</b> // Anexo | Arquivos-fonte do Bootstrap, jQuery, jQuery UI e demais scripts JS.</li>
+                    <li><b>stylesheets</b> // Anexo | Folhas de estilho do Bootstrap e do sistema
+                    <li><b class="pasta">Usuario</b> // Pasta do controller UsuarioController
+                        <ul>
+                            <li><b>index.tpl</b> // Include | View do método UsuarioController->index()</li>
+                            <li><b>editar.tpl</b> // Include | View do método UsuarioController->editar()</li>
+                        </ul>
+                    </li>
+                    <li>...</li>
+                </ul>
+            </li>
+            <li><b>index.php</b> // Configura variáveis do framework</li>
+        </ul>
     </body>
 </html>
