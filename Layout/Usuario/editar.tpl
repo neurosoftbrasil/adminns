@@ -68,7 +68,7 @@
     }
     FormHelper::startGroup();
     FormHelper::submitAjax("Salvar","salvar/".$u['id'],array('class'=>'btn-primary'));
-    FormHelper::button("excluir","Excluir","/".APP_DIR."service/excluir/".$u['id'],array(
+    FormHelper::button("excluir","Excluir",array(
         'class'=>'btn-danger',
         'onclick'=>'App.Usuario.Excluir("'.$u["name"].'",'.$u['id'].")"
     ));

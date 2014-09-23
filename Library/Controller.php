@@ -1,7 +1,11 @@
 <?php
 
 class Controller {
+    private $sets = array();
+    
     public function layout() {
+        foreach($this->sets as $key => $value) $$key = $value;
+        
         if(!Request::get('service')) {
             include(VIEW_DIR."header.php");
             echo "\n";
@@ -21,4 +25,8 @@ class Controller {
         }
     }
     public function index() {}
+    
+    public function set($key,$value) {
+        $this->sets[$key] = $value;
+    }
 }

@@ -51,20 +51,20 @@ class Request {
 		return $_SERVER['REQUEST_URI'];
 	}
 	public static function get($str) {
-		return isset(self::$get->{$str})?self::$get->{$str}:NULL;
+		return isset(self::$get->{$str}) && trim(self::$get->{$str})!=""?self::$get->{$str}:NULL;
 	}
 	public static function post($str) {
-		return isset(self::$post->{$str})?self::$post->{$str}:NULL;
+                return isset(self::$post->{$str}) && trim(self::$post->{$str})!=""?self::$post->{$str}:NULL;
 	}
 	public static function getOptions() {
 		return isset(self::$option)?self::$option:NULL;
 	}
 	public static function value($str) {
-		if(isset(self::$get->{$str})) {
+		if(isset(self::$get->{$str}) && trim(self::$get->{$str})!="") {
 			return self::$get->{$str};
-		} else if(isset(self::$post->{$str})) {
+		} else if(isset(self::$post->{$str}) && trim(self::$post->{$str})!="") {
 			return self::$post->{$str};
-		} else if(isset(self::$option->{$str})) {
+		} else if(isset(self::$option->{$str}) && trim(self::$option->{$str})!="") {
 			return self::$option->{$str};
 		}
 		return NULL;

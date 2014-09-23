@@ -26,5 +26,8 @@ App = {
         }
     },
     Usuario: {
+    },
+    Perfil: {
+
     }
 }

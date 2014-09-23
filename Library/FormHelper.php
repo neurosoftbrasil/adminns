@@ -42,7 +42,7 @@ class FormHelper {
         }
         echo '<p id="' . self::$formName . '_message"></p>';
     }
-    public static function button($id, $label = "Enviar",$path = "", $options = array()) {
+    public static function button($id, $label = "Enviar",$options = array()) {
         
         $html  = "<button type='button' class='";
         if(isset($options['class'])) {
@@ -200,6 +200,7 @@ class FormHelper {
             <? } ?>
                         $.post("<?= $action ?>", $("#<?= self::$formName ?>").serialize(), function(data) {
                             var json = JSON.parse(data);
+                            $("#<?= self::$formName ?>_message").removeClass('bg-danger').removeClass('bg-success');
                             switch (json.status) {
                                 case 'error':
                                     $("#<?= self::$formName ?>_message").addClass('bg-danger');
