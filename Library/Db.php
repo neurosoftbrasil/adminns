@@ -58,3 +58,40 @@ AND COLUMN_NAME = '".$column."_id'";
         }
     }
 }
+class DatabaseOld extends Database {
+    private $conn;
+    
+    public function __construct() {
+        if(!$this->conn) {
+            $this->conn = new PDO("mysql:host=localhost;dbname=neurosoft;port=3306", 'root', '',array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+        }
+    }
+    public function query($str,$unique = false,$format=PDO::FETCH_ASSOC) {
+        preg_match("/(insert)|(update)|(delete)|(select)/", strtolower($str),$operation);
+        try {
+            switch($operation[0]) {
+                case "select":
+                    $res = array();
+                    $stmt = $this->conn->prepare($str);
+                    $stmt->execute();
+                    $res = $stmt->fetchAll($format);
+                    if($unique && count($res)==1) {
+                        return $res[0];
+                    }
+                    return $res;
+                break;
+                case "insert":
+                    $this->conn->query($str);
+                    return $this->conn->lastInsertId();
+                break;
+                default:
+                    return $this->conn->query($str);
+                break;
+            }
+        } catch(Exception $e) {
+            die($e->getMessage());
+        }
+    }
+}
+global $dbold;
+$dbold = new DatabaseOld();
