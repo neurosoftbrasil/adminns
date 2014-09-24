@@ -5,6 +5,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema adminns
 -- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `adminns` ;
 CREATE SCHEMA IF NOT EXISTS `adminns` DEFAULT CHARACTER SET utf8 ;
 USE `adminns` ;
 
@@ -12,7 +13,7 @@ USE `adminns` ;
 -- Table `adminns`.`module`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `adminns`.`module` (
-  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
   `permission` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NOT NULL,
   PRIMARY KEY (`id`),
@@ -43,29 +44,25 @@ AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_bin;
 
-INSERT INTO `user` (`email`, `password`, `token`, `name`, `active`, `lastlogin`, `created`, `deleted`) VALUES
-('marcioaso@gmail.com', '4719d01f7606b6fb6bf0c9f5a31ccaffbd8cb5b5', '717dbe0d6c66b6545448b4151891b7a034266e3c', 'Márcio Oliveira', 1, '2014-09-23 18:17:46', '2014-09-17 15:29:53', 0);
-
-
 
 -- -----------------------------------------------------
 -- Table `adminns`.`user_module`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `adminns`.`user_module` (
-  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `level` INT(11) NOT NULL,
-  `module_id` BIGINT(20) UNSIGNED NOT NULL,
-  `user_id` BIGINT(20) UNSIGNED NOT NULL,
+  `module_id` INT UNSIGNED NOT NULL,
+  `user_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`, `module_id`, `user_id`),
   UNIQUE INDEX `id` (`id` ASC),
   INDEX `fk_user_module_module_idx` (`module_id` ASC),
-  INDEX `fk_user_module_user_idx` (`user_id` ASC),
+  INDEX `fk_user_module_user1_idx` (`user_id` ASC),
   CONSTRAINT `fk_user_module_module`
     FOREIGN KEY (`module_id`)
     REFERENCES `adminns`.`module` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_user_module_user`
+  CONSTRAINT `fk_user_module_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `adminns`.`user` (`id`)
     ON DELETE NO ACTION
@@ -84,12 +81,12 @@ CREATE TABLE IF NOT EXISTS `adminns`.`cliente` (
   `nome` VARCHAR(255) NULL,
   `documento` VARCHAR(45) NULL,
   `site` VARCHAR(255) NULL,
-  `user_module_id` BIGINT(20) UNSIGNED NOT NULL,
-  `module_id` BIGINT(20) UNSIGNED NOT NULL,
-  `user_id` BIGINT(20) UNSIGNED NOT NULL,
+  `user_module_id` INT UNSIGNED NOT NULL,
+  `module_id` INT UNSIGNED NOT NULL,
+  `user_id` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_cliente_user_module_idx` (`user_module_id` ASC, `module_id` ASC, `user_id` ASC),
-  CONSTRAINT `fk_cliente_user_module`
+  INDEX `fk_cliente_user_module1_idx` (`user_module_id` ASC, `module_id` ASC, `user_id` ASC),
+  CONSTRAINT `fk_cliente_user_module1`
     FOREIGN KEY (`user_module_id` , `module_id` , `user_id`)
     REFERENCES `adminns`.`user_module` (`id` , `module_id` , `user_id`)
     ON DELETE NO ACTION
@@ -116,8 +113,8 @@ CREATE TABLE IF NOT EXISTS `adminns`.`cidade` (
   `nome` VARCHAR(255) NULL,
   `estado_id` INT NOT NULL,
   PRIMARY KEY (`id`, `estado_id`),
-  INDEX `fk_cidade_estado_idx` (`estado_id` ASC),
-  CONSTRAINT `fk_cidade_estado`
+  INDEX `fk_cidade_estado1_idx` (`estado_id` ASC),
+  CONSTRAINT `fk_cidade_estado1`
     FOREIGN KEY (`estado_id`)
     REFERENCES `adminns`.`estado` (`id`)
     ON DELETE NO ACTION
@@ -135,8 +132,8 @@ CREATE TABLE IF NOT EXISTS `adminns`.`endereco` (
   `cep` VARCHAR(15) NULL,
   `cidade_id` INT NOT NULL,
   PRIMARY KEY (`id`, `cidade_id`),
-  INDEX `fk_endereco_cidade_idx` (`cidade_id` ASC),
-  CONSTRAINT `fk_endereco_cidade`
+  INDEX `fk_endereco_cidade1_idx` (`cidade_id` ASC),
+  CONSTRAINT `fk_endereco_cidade1`
     FOREIGN KEY (`cidade_id`)
     REFERENCES `adminns`.`cidade` (`id`)
     ON DELETE NO ACTION
@@ -167,20 +164,20 @@ CREATE TABLE IF NOT EXISTS `adminns`.`cliente_endereco` (
   `referencia` TEXT NULL,
   `cliente_endereco_tipo_id` INT NOT NULL,
   PRIMARY KEY (`id`, `cliente_id`, `endereco_id`, `endereco_cidade_id`, `cliente_endereco_tipo_id`),
-  INDEX `fk_endereco_has_cliente_cliente_idx` (`cliente_id` ASC),
-  INDEX `fk_endereco_has_cliente_endereco_idx` (`endereco_id` ASC, `endereco_cidade_id` ASC),
-  INDEX `fk_cliente_endereco_cliente_endereco_tipo_idx` (`cliente_endereco_tipo_id` ASC),
-  CONSTRAINT `fk_endereco_has_cliente_endereco`
+  INDEX `fk_endereco_has_cliente_cliente1_idx` (`cliente_id` ASC),
+  INDEX `fk_endereco_has_cliente_endereco1_idx` (`endereco_id` ASC, `endereco_cidade_id` ASC),
+  INDEX `fk_cliente_endereco_cliente_endereco_tipo1_idx` (`cliente_endereco_tipo_id` ASC),
+  CONSTRAINT `fk_endereco_has_cliente_endereco1`
     FOREIGN KEY (`endereco_id` , `endereco_cidade_id`)
     REFERENCES `adminns`.`endereco` (`id` , `cidade_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_endereco_has_cliente_cliente`
+  CONSTRAINT `fk_endereco_has_cliente_cliente1`
     FOREIGN KEY (`cliente_id`)
     REFERENCES `adminns`.`cliente` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_cliente_endereco_cliente_endereco_tipo`
+  CONSTRAINT `fk_cliente_endereco_cliente_endereco_tipo1`
     FOREIGN KEY (`cliente_endereco_tipo_id`)
     REFERENCES `adminns`.`cliente_endereco_tipo` (`id`)
     ON DELETE NO ACTION
@@ -198,31 +195,31 @@ CREATE TABLE IF NOT EXISTS `adminns`.`pedido` (
   `aamortizar` DECIMAL NULL,
   `pedido_formapagamento_id` INT NOT NULL,
   `pedido_status_id` INT NOT NULL,
-  `user_module_id` BIGINT(20) UNSIGNED NOT NULL,
-  `user_module_module_id` BIGINT(20) UNSIGNED NOT NULL,
-  `user_module_user_id` BIGINT(20) UNSIGNED NOT NULL,
+  `user_module_id` INT UNSIGNED NOT NULL,
+  `user_module_module_id` INT UNSIGNED NOT NULL,
+  `user_module_user_id` INT UNSIGNED NOT NULL,
   `cliente_id` INT NOT NULL,
   PRIMARY KEY (`id`, `pedido_formapagamento_id`, `pedido_status_id`, `cliente_id`),
-  INDEX `fk_pedido_pedido_formapagamento_idx` (`pedido_formapagamento_id` ASC),
-  INDEX `fk_pedido_pedido_status_idx` (`pedido_status_id` ASC),
-  INDEX `fk_pedido_user_module_idx` (`user_module_id` ASC, `user_module_module_id` ASC, `user_module_user_id` ASC),
-  INDEX `fk_pedido_cliente_idx` (`cliente_id` ASC),
-  CONSTRAINT `fk_pedido_pedido_formapagamento`
+  INDEX `fk_pedido_pedido_formapagamento1_idx` (`pedido_formapagamento_id` ASC),
+  INDEX `fk_pedido_pedido_status1_idx` (`pedido_status_id` ASC),
+  INDEX `fk_pedido_user_module1_idx` (`user_module_id` ASC, `user_module_module_id` ASC, `user_module_user_id` ASC),
+  INDEX `fk_pedido_cliente1_idx` (`cliente_id` ASC),
+  CONSTRAINT `fk_pedido_pedido_formapagamento1`
     FOREIGN KEY (`pedido_formapagamento_id`)
     REFERENCES `adminns`.`pedido_formapagamento` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pedido_pedido_status`
+  CONSTRAINT `fk_pedido_pedido_status1`
     FOREIGN KEY (`pedido_status_id`)
     REFERENCES `adminns`.`pedido_status` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pedido_user_module`
+  CONSTRAINT `fk_pedido_user_module1`
     FOREIGN KEY (`user_module_id` , `user_module_module_id` , `user_module_user_id`)
     REFERENCES `adminns`.`user_module` (`id` , `module_id` , `user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pedido_cliente`
+  CONSTRAINT `fk_pedido_cliente1`
     FOREIGN KEY (`cliente_id`)
     REFERENCES `adminns`.`cliente` (`id`)
     ON DELETE NO ACTION
@@ -252,14 +249,14 @@ CREATE TABLE IF NOT EXISTS `adminns`.`contato` (
   `cliente_id` INT NOT NULL,
   `contato_tipo_id` INT NOT NULL,
   PRIMARY KEY (`id`, `cliente_id`, `contato_tipo_id`),
-  INDEX `fk_contato_cliente_idx` (`cliente_id` ASC),
-  INDEX `fk_contato_contato_tipo_idx` (`contato_tipo_id` ASC),
-  CONSTRAINT `fk_contato_cliente`
+  INDEX `fk_contato_cliente1_idx` (`cliente_id` ASC),
+  INDEX `fk_contato_contato_tipo1_idx` (`contato_tipo_id` ASC),
+  CONSTRAINT `fk_contato_cliente1`
     FOREIGN KEY (`cliente_id`)
     REFERENCES `adminns`.`cliente` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_contato_contato_tipo`
+  CONSTRAINT `fk_contato_contato_tipo1`
     FOREIGN KEY (`contato_tipo_id`)
     REFERENCES `adminns`.`contato_tipo` (`id`)
     ON DELETE NO ACTION
@@ -278,8 +275,8 @@ CREATE TABLE IF NOT EXISTS `adminns`.`contato_email` (
   `contato_cliente_id` INT NOT NULL,
   `contato_contato_tipo_id` INT NOT NULL,
   PRIMARY KEY (`id`, `contato_id`, `contato_cliente_id`, `contato_contato_tipo_id`),
-  INDEX `fk_contato_email_contato_idx` (`contato_id` ASC, `contato_cliente_id` ASC, `contato_contato_tipo_id` ASC),
-  CONSTRAINT `fk_contato_email_contato`
+  INDEX `fk_contato_email_contato1_idx` (`contato_id` ASC, `contato_cliente_id` ASC, `contato_contato_tipo_id` ASC),
+  CONSTRAINT `fk_contato_email_contato1`
     FOREIGN KEY (`contato_id` , `contato_cliente_id` , `contato_contato_tipo_id`)
     REFERENCES `adminns`.`contato` (`id` , `cliente_id` , `contato_tipo_id`)
     ON DELETE NO ACTION
@@ -298,8 +295,8 @@ CREATE TABLE IF NOT EXISTS `adminns`.`contato_telefone` (
   `contato_cliente_id` INT NOT NULL,
   `contato_contato_tipo_id` INT NOT NULL,
   PRIMARY KEY (`id`, `contato_id`, `contato_cliente_id`, `contato_contato_tipo_id`),
-  INDEX `fk_contato_telefone_contato_idx` (`contato_id` ASC, `contato_cliente_id` ASC, `contato_contato_tipo_id` ASC),
-  CONSTRAINT `fk_contato_telefone_contato`
+  INDEX `fk_contato_telefone_contato1_idx` (`contato_id` ASC, `contato_cliente_id` ASC, `contato_contato_tipo_id` ASC),
+  CONSTRAINT `fk_contato_telefone_contato1`
     FOREIGN KEY (`contato_id` , `contato_cliente_id` , `contato_contato_tipo_id`)
     REFERENCES `adminns`.`contato` (`id` , `cliente_id` , `contato_tipo_id`)
     ON DELETE NO ACTION
@@ -337,31 +334,31 @@ CREATE TABLE IF NOT EXISTS `adminns`.`pedido` (
   `aamortizar` DECIMAL NULL,
   `pedido_formapagamento_id` INT NOT NULL,
   `pedido_status_id` INT NOT NULL,
-  `user_module_id` BIGINT(20) UNSIGNED NOT NULL,
-  `user_module_module_id` BIGINT(20) UNSIGNED NOT NULL,
-  `user_module_user_id` BIGINT(20) UNSIGNED NOT NULL,
+  `user_module_id` INT UNSIGNED NOT NULL,
+  `user_module_module_id` INT UNSIGNED NOT NULL,
+  `user_module_user_id` INT UNSIGNED NOT NULL,
   `cliente_id` INT NOT NULL,
   PRIMARY KEY (`id`, `pedido_formapagamento_id`, `pedido_status_id`, `cliente_id`),
-  INDEX `fk_pedido_pedido_formapagamento_idx` (`pedido_formapagamento_id` ASC),
-  INDEX `fk_pedido_pedido_status_idx` (`pedido_status_id` ASC),
-  INDEX `fk_pedido_user_module_idx` (`user_module_id` ASC, `user_module_module_id` ASC, `user_module_user_id` ASC),
-  INDEX `fk_pedido_cliente_idx` (`cliente_id` ASC),
-  CONSTRAINT `fk_pedido_pedido_formapagamento`
+  INDEX `fk_pedido_pedido_formapagamento1_idx` (`pedido_formapagamento_id` ASC),
+  INDEX `fk_pedido_pedido_status1_idx` (`pedido_status_id` ASC),
+  INDEX `fk_pedido_user_module1_idx` (`user_module_id` ASC, `user_module_module_id` ASC, `user_module_user_id` ASC),
+  INDEX `fk_pedido_cliente1_idx` (`cliente_id` ASC),
+  CONSTRAINT `fk_pedido_pedido_formapagamento1`
     FOREIGN KEY (`pedido_formapagamento_id`)
     REFERENCES `adminns`.`pedido_formapagamento` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pedido_pedido_status`
+  CONSTRAINT `fk_pedido_pedido_status1`
     FOREIGN KEY (`pedido_status_id`)
     REFERENCES `adminns`.`pedido_status` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pedido_user_module`
+  CONSTRAINT `fk_pedido_user_module1`
     FOREIGN KEY (`user_module_id` , `user_module_module_id` , `user_module_user_id`)
     REFERENCES `adminns`.`user_module` (`id` , `module_id` , `user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pedido_cliente`
+  CONSTRAINT `fk_pedido_cliente1`
     FOREIGN KEY (`cliente_id`)
     REFERENCES `adminns`.`cliente` (`id`)
     ON DELETE NO ACTION
@@ -380,8 +377,8 @@ CREATE TABLE IF NOT EXISTS `adminns`.`pedido_notafiscal` (
   `pedido_pedido_formapagamento_id` INT NOT NULL,
   `pedido_pedido_status_id` INT NOT NULL,
   PRIMARY KEY (`id`, `pedido_id`, `pedido_pedido_formapagamento_id`, `pedido_pedido_status_id`),
-  INDEX `fk_pedido_notafiscal_pedido_idx` (`pedido_id` ASC, `pedido_pedido_formapagamento_id` ASC, `pedido_pedido_status_id` ASC),
-  CONSTRAINT `fk_pedido_notafiscal_pedido`
+  INDEX `fk_pedido_notafiscal_pedido1_idx` (`pedido_id` ASC, `pedido_pedido_formapagamento_id` ASC, `pedido_pedido_status_id` ASC),
+  CONSTRAINT `fk_pedido_notafiscal_pedido1`
     FOREIGN KEY (`pedido_id` , `pedido_pedido_formapagamento_id` , `pedido_pedido_status_id`)
     REFERENCES `adminns`.`pedido` (`id` , `pedido_formapagamento_id` , `pedido_status_id`)
     ON DELETE NO ACTION
@@ -399,20 +396,19 @@ CREATE TABLE IF NOT EXISTS `adminns`.`cliente_pedido` (
   `pedido_pedido_status_id` INT NOT NULL,
   `cliente_id` INT NOT NULL,
   PRIMARY KEY (`id`, `pedido_id`, `pedido_pedido_formapagamento_id`, `pedido_pedido_status_id`, `cliente_id`),
-  INDEX `fk_pedido_has_cliente_cliente_idx` (`cliente_id` ASC),
-  INDEX `fk_pedido_has_cliente_pedido_idx` (`pedido_id` ASC, `pedido_pedido_formapagamento_id` ASC, `pedido_pedido_status_id` ASC),
-  CONSTRAINT `fk_pedido_has_cliente_pedido`
+  INDEX `fk_pedido_has_cliente_cliente1_idx` (`cliente_id` ASC),
+  INDEX `fk_pedido_has_cliente_pedido1_idx` (`pedido_id` ASC, `pedido_pedido_formapagamento_id` ASC, `pedido_pedido_status_id` ASC),
+  CONSTRAINT `fk_pedido_has_cliente_pedido1`
     FOREIGN KEY (`pedido_id` , `pedido_pedido_formapagamento_id` , `pedido_pedido_status_id`)
     REFERENCES `adminns`.`pedido` (`id` , `pedido_formapagamento_id` , `pedido_status_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_pedido_has_cliente_cliente`
+  CONSTRAINT `fk_pedido_has_cliente_cliente1`
     FOREIGN KEY (`cliente_id`)
     REFERENCES `adminns`.`cliente` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `adminns`.`produto`
@@ -438,15 +434,15 @@ CREATE TABLE IF NOT EXISTS `adminns`.`pedido_produto` (
   `pedido_status_id` INT NOT NULL,
   `cliente_id` INT NOT NULL,
   `quantidade` INT NULL,
-  INDEX `fk_produto_has_pedido_pedido_idx` (`pedido_id` ASC, `pedido_formapagamento_id` ASC, `pedido_status_id` ASC, `cliente_id` ASC),
-  INDEX `fk_produto_has_pedido_produto_idx` (`produto_id` ASC),
+  INDEX `fk_produto_has_pedido_pedido1_idx` (`pedido_id` ASC, `pedido_formapagamento_id` ASC, `pedido_status_id` ASC, `cliente_id` ASC),
+  INDEX `fk_produto_has_pedido_produto1_idx` (`produto_id` ASC),
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_produto_has_pedido_produto`
+  CONSTRAINT `fk_produto_has_pedido_produto1`
     FOREIGN KEY (`produto_id`)
     REFERENCES `adminns`.`produto` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_produto_has_pedido_pedido`
+  CONSTRAINT `fk_produto_has_pedido_pedido1`
     FOREIGN KEY (`pedido_id` , `pedido_formapagamento_id` , `pedido_status_id` , `cliente_id`)
     REFERENCES `adminns`.`pedido` (`id` , `pedido_formapagamento_id` , `pedido_status_id` , `cliente_id`)
     ON DELETE NO ACTION
@@ -462,8 +458,8 @@ CREATE TABLE IF NOT EXISTS `adminns`.`produto_rastreavel` (
   `numerodeserie` VARCHAR(45) NULL,
   `produto_id` INT NOT NULL,
   PRIMARY KEY (`id`, `produto_id`),
-  INDEX `fk_produto_rastreavel_produto_idx` (`produto_id` ASC),
-  CONSTRAINT `fk_produto_rastreavel_produto`
+  INDEX `fk_produto_rastreavel_produto1_idx` (`produto_id` ASC),
+  CONSTRAINT `fk_produto_rastreavel_produto1`
     FOREIGN KEY (`produto_id`)
     REFERENCES `adminns`.`produto` (`id`)
     ON DELETE NO ACTION
@@ -479,8 +475,8 @@ CREATE TABLE IF NOT EXISTS `adminns`.`produto_categoria` (
   `descricao` VARCHAR(45) NULL,
   `produto_categoria_id` INT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_produto_categoria_produto_categoria_idx` (`produto_categoria_id` ASC),
-  CONSTRAINT `fk_produto_categoria_produto_categoria`
+  INDEX `fk_produto_categoria_produto_categoria1_idx` (`produto_categoria_id` ASC),
+  CONSTRAINT `fk_produto_categoria_produto_categoria1`
     FOREIGN KEY (`produto_categoria_id`)
     REFERENCES `adminns`.`produto_categoria` (`id`)
     ON DELETE NO ACTION
@@ -496,14 +492,14 @@ CREATE TABLE IF NOT EXISTS `adminns`.`produto_produto_categoria` (
   `categoria_id` INT NOT NULL,
   `produto_id` INT NOT NULL,
   PRIMARY KEY (`id`, `categoria_id`, `produto_id`),
-  INDEX `fk_categoria_has_produto_produto_idx` (`produto_id` ASC),
-  INDEX `fk_categoria_has_produto_categoria_idx` (`categoria_id` ASC),
-  CONSTRAINT `fk_categoria_has_produto_categoria`
+  INDEX `fk_categoria_has_produto_produto1_idx` (`produto_id` ASC),
+  INDEX `fk_categoria_has_produto_categoria1_idx` (`categoria_id` ASC),
+  CONSTRAINT `fk_categoria_has_produto_categoria1`
     FOREIGN KEY (`categoria_id`)
     REFERENCES `adminns`.`produto_categoria` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_categoria_has_produto_produto`
+  CONSTRAINT `fk_categoria_has_produto_produto1`
     FOREIGN KEY (`produto_id`)
     REFERENCES `adminns`.`produto` (`id`)
     ON DELETE NO ACTION
@@ -559,38 +555,37 @@ CREATE TABLE IF NOT EXISTS `adminns`.`suporte` (
   `custo` DECIMAL NULL,
   `valor` DECIMAL NULL,
   PRIMARY KEY (`id`, `suporte_categoria_id`),
-  INDEX `fk_suporte_pedido_produto_idx` (`produto_id` ASC, `pedido_id` ASC),
-  INDEX `fk_suporte_contato_idx` (`contato_id` ASC, `contato_cliente_id` ASC, `contato_tipo_id` ASC),
-  INDEX `fk_suporte_suporte_status_idx` (`suporte_status_id` ASC),
-  INDEX `fk_suporte_suporte_ranking_idx` (`suporte_ranking_id` ASC),
-  INDEX `fk_suporte_user_idx` (`user_id` ASC),
-  INDEX `fk_suporte_suporte_categoria_idx` (`suporte_categoria_id` ASC),
-  CONSTRAINT `fk_suporte_pedido_produto`
-    FOREIGN KEY (`produto_id` , `pedido_id`)
-    REFERENCES `adminns`.`pedido_produto` (`produto_id` , `pedido_id`)
+  INDEX `fk_suporte_contato1_idx` (`contato_id` ASC),
+  INDEX `fk_suporte_suporte_status1_idx` (`suporte_status_id` ASC),
+  INDEX `fk_suporte_suporte_ranking1_idx` (`suporte_ranking_id` ASC),
+  INDEX `fk_suporte_user1_idx` (`user_id` ASC),
+  INDEX `fk_suporte_suporte_categoria1_idx` (`suporte_categoria_id` ASC),
+  CONSTRAINT `fk_suporte_pedido_produto1`
+    FOREIGN KEY (`id`)
+    REFERENCES `adminns`.`pedido_produto` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_suporte_contato`
-    FOREIGN KEY (`contato_id` , `contato_cliente_id` , `contato_tipo_id`)
-    REFERENCES `adminns`.`contato` (`id` , `cliente_id` , `contato_tipo_id`)
+  CONSTRAINT `fk_suporte_contato1`
+    FOREIGN KEY (`contato_id`)
+    REFERENCES `adminns`.`contato` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_suporte_suporte_status`
+  CONSTRAINT `fk_suporte_suporte_status1`
     FOREIGN KEY (`suporte_status_id`)
     REFERENCES `adminns`.`suporte_status` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_suporte_suporte_ranking`
+  CONSTRAINT `fk_suporte_suporte_ranking1`
     FOREIGN KEY (`suporte_ranking_id`)
     REFERENCES `adminns`.`suporte_ranking` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_suporte_user`
+  CONSTRAINT `fk_suporte_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `adminns`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_suporte_suporte_categoria`
+  CONSTRAINT `fk_suporte_suporte_categoria1`
     FOREIGN KEY (`suporte_categoria_id`)
     REFERENCES `adminns`.`suporte_categoria` (`id`)
     ON DELETE NO ACTION
@@ -609,14 +604,14 @@ CREATE TABLE IF NOT EXISTS `adminns`.`suporte_observacao` (
   `user_id` INT UNSIGNED NOT NULL,
   `suporte_id` INT NOT NULL,
   PRIMARY KEY (`id`, `suporte_id`),
-  INDEX `fk_suporte_observacao_user_idx` (`user_id` ASC),
+  INDEX `fk_suporte_observacao_user1_idx` (`user_id` ASC),
   INDEX `fk_suporte_observacao_suporte2_idx` (`suporte_id` ASC),
-  CONSTRAINT `fk_suporte_observacao_user`
+  CONSTRAINT `fk_suporte_observacao_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `adminns`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_suporte_observacao_suporte`
+  CONSTRAINT `fk_suporte_observacao_suporte2`
     FOREIGN KEY (`suporte_id`)
     REFERENCES `adminns`.`suporte` (`id`)
     ON DELETE NO ACTION
@@ -632,8 +627,8 @@ CREATE TABLE IF NOT EXISTS `adminns`.`produto_acessorio` (
   `descricao` VARCHAR(45) NULL,
   `produto_id` INT NOT NULL,
   PRIMARY KEY (`id`, `produto_id`),
-  INDEX `fk_produto_acessorio_produto_idx` (`produto_id` ASC),
-  CONSTRAINT `fk_produto_acessorio_produto`
+  INDEX `fk_produto_acessorio_produto1_idx` (`produto_id` ASC),
+  CONSTRAINT `fk_produto_acessorio_produto1`
     FOREIGN KEY (`produto_id`)
     REFERENCES `adminns`.`produto` (`id`)
     ON DELETE NO ACTION
@@ -651,33 +646,33 @@ CREATE TABLE IF NOT EXISTS `adminns`.`produto_erro` (
   `solucao` TEXT NULL,
   `data` DATETIME NULL,
   `produto_erroscol` VARCHAR(45) NULL,
-  `user_id` BIGINT(20) UNSIGNED NOT NULL,
+  `user_id` INT UNSIGNED NOT NULL,
   `produto_id` INT NOT NULL,
   `suporte_observacao_id` INT NOT NULL,
   `suporte_observacao_suporte_id` INT NOT NULL,
   `produto_acessorio_id` INT NULL,
   `mensagemdeerro` VARCHAR(45) NULL,
   PRIMARY KEY (`id`, `user_id`, `produto_id`),
-  INDEX `fk_produto_erro_user_idx` (`user_id` ASC),
-  INDEX `fk_produto_erro_produto_idx` (`produto_id` ASC),
-  INDEX `fk_produto_erro_suporte_observacao_idx` (`suporte_observacao_id` ASC, `suporte_observacao_suporte_id` ASC),
-  INDEX `fk_produto_erro_produto_acessorio_idx` (`produto_acessorio_id` ASC),
-  CONSTRAINT `fk_produto_erro_user`
+  INDEX `fk_produto_erro_user1_idx` (`user_id` ASC),
+  INDEX `fk_produto_erro_produto1_idx` (`produto_id` ASC),
+  INDEX `fk_produto_erro_suporte_observacao1_idx` (`suporte_observacao_id` ASC, `suporte_observacao_suporte_id` ASC),
+  INDEX `fk_produto_erro_produto_acessorio1_idx` (`produto_acessorio_id` ASC),
+  CONSTRAINT `fk_produto_erro_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `adminns`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_produto_erro_produto`
+  CONSTRAINT `fk_produto_erro_produto1`
     FOREIGN KEY (`produto_id`)
     REFERENCES `adminns`.`produto` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_produto_erro_suporte_observacao`
+  CONSTRAINT `fk_produto_erro_suporte_observacao1`
     FOREIGN KEY (`suporte_observacao_id` , `suporte_observacao_suporte_id`)
     REFERENCES `adminns`.`suporte_observacao` (`id` , `suporte_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_produto_erro_produto_acessorio`
+  CONSTRAINT `fk_produto_erro_produto_acessorio1`
     FOREIGN KEY (`produto_acessorio_id`)
     REFERENCES `adminns`.`produto_acessorio` (`id`)
     ON DELETE NO ACTION
@@ -696,26 +691,18 @@ CREATE TABLE IF NOT EXISTS `adminns`.`suporte_observacao` (
   `user_id` INT UNSIGNED NOT NULL,
   `suporte_id` INT NOT NULL,
   PRIMARY KEY (`id`, `suporte_id`),
-  INDEX `fk_suporte_observacao_user_idx` (`user_id` ASC),
+  INDEX `fk_suporte_observacao_user1_idx` (`user_id` ASC),
   INDEX `fk_suporte_observacao_suporte2_idx` (`suporte_id` ASC),
-  CONSTRAINT `fk_suporte_observacao_user`
+  CONSTRAINT `fk_suporte_observacao_user1`
     FOREIGN KEY (`user_id`)
     REFERENCES `adminns`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_suporte_observacao_suporte`
+  CONSTRAINT `fk_suporte_observacao_suporte2`
     FOREIGN KEY (`suporte_id`)
     REFERENCES `adminns`.`suporte` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `adminns`.``
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `adminns`.`` (
-)
 ENGINE = InnoDB;
 
 
