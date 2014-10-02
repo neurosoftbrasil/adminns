@@ -72,13 +72,18 @@ class DatabaseOld extends Database {
             switch($operation[0]) {
                 case "select":
                     $res = array();
-                    $stmt = $this->conn->prepare($str);
-                    $stmt->execute();
-                    $res = $stmt->fetchAll($format);
-                    if($unique && count($res)==1) {
-                        return $res[0];
+                    try {
+                        $stmt = $this->conn->prepare($str);
+                        $stmt->execute();
+                        $res = $stmt->fetchAll($format);
+                        if($unique && count($res)==1) {
+                            return $res[0];
+                        }
+                        return $res;
+                    } catch(Exception $e) {
+                        return $e->getMessage();
                     }
-                    return $res;
+                    
                 break;
                 case "insert":
                     $this->conn->query($str);
@@ -93,5 +98,3 @@ class DatabaseOld extends Database {
         }
     }
 }
-global $dbold;
-$dbold = new DatabaseOld();

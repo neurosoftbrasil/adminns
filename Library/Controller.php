@@ -15,8 +15,7 @@ class Controller {
             }
         }
         
-        $path = VIEW_DIR.ucwords(Request::get('controller'))."/".Request::get('method').".tpl";
-        
+        $path = VIEW_DIR.ucwords(Request::get('controller'))."/".Request::get('method').".php";
         if(file_exists($path)) {
             include($path);
         }

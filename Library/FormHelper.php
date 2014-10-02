@@ -56,6 +56,39 @@ class FormHelper {
         $html .= ">$label</button>";
         echo $html;
     }
+    public static function typeAhead($idName,$label,$ajaxPath,$options) {
+        ?><div class="form-group cliente_group">
+        <label for="<?=$idName?>"><?=$label?></label><br/>
+        <input id="<?=$idName?>" class="form-control <? 
+            if(isset($options['class'])) {
+                echo $options['class'];
+                unset($options['class']);
+            }
+        ?>" type="text"
+        <?
+            echo Helper::printParams($options);
+        ?> value="<?=Request::value($idName)?>" name="<?=$idName?>"/>
+        <input type='hidden' id="<?=$idName?>Id" name="<?=$idName?>Id" value="<?=Request::value($idName."Id")?>"/>
+    </div>  
+    <script type="text/javascript">
+        $('#<?=$idName?>').typeahead({
+            hint: true,
+            highlight: true,
+            minLength: 1
+        },
+        {
+            source: function (query, process) {
+                return $.get(App.BasePath+'service/<?=$ajaxPath?>?<?=$idName?>=' + query, function (data) {
+                    res = JSON.parse(data);
+                    return process(res.results);
+                });
+            }
+        });
+        $('#<?=$idName?>').on('typeahead:selected', function(evt, item) {
+            $('#<?=$idName?>Id').val(item.id);
+        });
+    </script><?
+    }
     public static function checkbox($idName, $label = '', $fields = array()) {
         ?><div class="checkbox <?= $idName ?>_group"><?
                 if (gettype($fields)=='string') {
@@ -234,7 +267,27 @@ class FormHelper {
         }
         echo $html;
     }
-
+    public static function selectFromTable($tableField,$description,$label="",$value='',$options=array()) {
+        $cols = explode(".",$tableField);
+        $table = $cols[0];
+        $field = $cols[1];
+        $tableField = $table."_".$field;
+        global $db;
+        $res = $db->query("select $field,$description from $table");
+        $html = '<div class="form-group ' . $table . '_group">' . "\n";
+        if ($label != false) {
+            $html .= '<label for="' . $table . '">' . $label . '</label>' . "\n";
+        }
+        $html .= "<select id='$tableField' name='$tableField' class='form-control'";
+        $html .= Helper::printParams($options);
+        $html .= "><option value='0'>Selecione</option>";
+        foreach($res as $r) {
+            $html .= "<option value='".$r[$field]."' ".($value==$r[$field]?"selected":"").">".$r[$description]."</option>";
+        }
+        $html .= "</select>";
+        $html .= "</div>";
+        echo $html;
+    }
     public static function submitAjax($label, $action, $options = array()) {
         self::submit(self::$formName . "_submit", $label, array_merge($options, array(
             'method' => 'ajax',

@@ -1,12 +1,30 @@
 <?php
 
 class ClienteController extends AppController {
-
+    public function produtos() {
+        global $db;
+        global $dbo;
+        $query = "select produto_id as codigo, descricoes_resumida as descricao, pacote_caixa as unidade, preco_real as preco, nome_nf as nome, name as nome_internacional,visivel,fabricante as fabricante_id,kit,rastreavel,tipo from produtos";
+        $prold = $dbo->query($query);
+        foreach($prold as $p) {
+            $p['kit'] = $p['kit']=="Não"?"0":"1";
+            $tipo = array(
+                'Produto'=>0,
+                'Servico'=>1,
+                'Curso'=>2
+            );
+            $p['descricao'] = mysql_real_escape_string($p['descricao']);
+            $p['tipo'] = $tipo[$p['tipo']];
+            $query = "insert into produto (codigo,descricao,unidade,preco,nome,nome_internacional,visivel,fabricante_id,kit,serial,tipo_id) values ('".implode("','",$p)."');";
+            $db->query($query);
+            //echo $query;
+        }
+    }
     public function clientes() {
         global $db;
-        global $dbold;
+        global $dbo;
         $u = $db->query("select * from cliente");
-        $clientes = $dbold->query('select cliente_id as id, nome, cpf as documento, 3 as module_id from clientes c order by id');
+        $clientes = $dbo->query('select cliente_id as id, nome, cpf as documento, 3 as module_id from clientes c order by id');
         foreach ($clientes as $c) {
             $id = $c['id'];
             if ($id > 0 && count($db->query("select id from cliente where id=" . $id)) == 0) {
@@ -32,9 +50,9 @@ class ClienteController extends AppController {
 
     public function pj() {
         global $db;
-        global $dbold;
+        global $dbo;
         $u = $db->query("select * from cliente");
-        $clientes = $dbold->query('select cliente_pj_id as id, razao as nome, cnpj as documento, 3 as module_id from clientes_pj c');
+        $clientes = $dbo->query('select cliente_pj_id as id, razao as nome, cnpj as documento, 3 as module_id from clientes_pj c');
 
         foreach ($clientes as $c) {
             $id = $c['id'];
@@ -62,7 +80,7 @@ class ClienteController extends AppController {
     }
     public function contato() {
         global $db;
-        global $dbold;
+        global $dbo;
         
         $q = array();
         
@@ -77,7 +95,7 @@ class ClienteController extends AppController {
         $query .= implode(",",$q);
         $query1 = $query . ", 1 as cliente_contato_tipo, 1 as padrao, '' as cargo from clientes where cliente_id>0 order by cliente_id";
         
-        $contatos = $dbold->query($query1);
+        $contatos = $dbo->query($query1);
         
         foreach($contatos as $c) {
             $c['aniversario'] = '0000-00-00';
@@ -269,7 +287,7 @@ class ClienteController extends AppController {
     }
     public function endereco() {
         global $db;
-        global $dbold;
+        global $dbo;
 
         $q = array();
 
@@ -287,7 +305,7 @@ class ClienteController extends AppController {
         $query .= implode(",", $q);
         $query1 = $query . ",1 as cliente_endereco_tipo_id from clientes_enderecos order by cliente_id";
 
-        $enderecos = $dbold->query($query1);
+        $enderecos = $dbo->query($query1);
         
         $counter = 50000;
         

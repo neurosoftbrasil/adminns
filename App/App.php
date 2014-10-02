@@ -9,9 +9,11 @@ include('Library/FormHelper.php');
 include('Library/Session.php');
 include('Library/Router.php');
 include('App/Controller/AppController.php');
+include('App/Model/AppModel.php');
 
 class App {
     public $db;
+    public $dbo;
     public $config;
     public $request;
     public $router;
@@ -21,7 +23,11 @@ class App {
         $this->db = new Database();
         global $db;
         $db = $this->db;
-
+        
+        $this->dbo = new DatabaseOld();
+        global $dbo;
+        $dbo = $this->dbo;
+        
         // Binder dos configs
         $this->config = (object) array(
             'db'=>Config::db(),

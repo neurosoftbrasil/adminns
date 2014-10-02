@@ -1,14 +1,13 @@
 <?php
 class UsuarioController extends SecureController {
     public function index() {
-        Helper::js('App.Usuario');
         if(!Session::hasPermission('usuario',Session::EXCLUIR)) Router::redirect('home');
     }
     public function editar() {
         if(!Session::hasPermission('usuario',Session::EXCLUIR)) Router::redirect('home');
     }
     public function inserir() {
-        if(!Session::hasPermission('usuario',Session::EXCLUIR)) Router::redirect('home');
+        Router::redirect('usuario','editar');
     }
     public function resetarsenha() {
         if(!Session::hasPermission('usuario',Session::EXCLUIR)) Router::redirect('home');
@@ -118,24 +117,5 @@ class UsuarioController extends SecureController {
             $j['message'] = 'O sistema não pode salvar o usuário. Contate o administrador.';
         }
         echo json_encode($j);
-    } 
-    public function layout() {
-        if(!Request::get('service')) {
-            include(VIEW_DIR."header.php");
-            echo "\n";
-        } else {
-            if(Config::$environment=='production') {
-                header('Content-Type: application/json');
-            }
-        }
-        $page = Request::get('method')=="inserir"?"editar":Request::get('method');
-        $path = VIEW_DIR.ucwords(Request::get('controller'))."/".$page.".tpl";
-        
-        if(file_exists($path)) {
-            include($path);
-        }
-        if(!Request::get('service')) {
-            include(VIEW_DIR."footer.php");
-        }
     }
 }

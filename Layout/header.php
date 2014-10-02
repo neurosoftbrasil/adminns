@@ -10,6 +10,7 @@
         <?= Helper::js("jquery-1.11.1.min"); ?>
         <?= Helper::js("bootstrap.min"); ?>
         <?= Helper::js("App"); ?>
+        <script type="text/javascript"> App.BasePath = "/<?=APP_DIR?>";</script>
     </head>
     <body>
         <? if(Session::isLogged()) {?><span class="logado"><small>Você está logado como <strong><?=Session::get('name')?></strong></small></span><?}?>
@@ -27,6 +28,11 @@
                 <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
                     <? if(Session::isLogged()) { // dependentes de login?>
                     <ul class="nav navbar-nav">
+                        <? if(Session::hasPermission('pedido',Session::VISUALIZAR)) { ?>
+                            <li class="active">
+                                <a href="<?=Helper::link('pedido')?>">Pedido</a>
+                            </li>
+                        <? } ?>
                         <? if(Session::hasPermission('suporte',Session::VISUALIZAR)) { ?>
                             <li class="active">
                                 <a href="<?=Helper::link('suporte')?>">Suporte</a>

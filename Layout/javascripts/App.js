@@ -1,4 +1,5 @@
 App = {
+    BasePath : '',
     Modal: {
         Show: function(heading, question, okText, callback, parameters, cancelText) {
             var cancel = cancelText ? cancelText : 'Cancelar';
@@ -25,9 +26,6 @@ App = {
             confirmModal.modal('show');
         }
     },
-    Usuario: {
-    },
-    Perfil: {
-
-    }
+    Usuario: {},
+    Perfil: {}
 }

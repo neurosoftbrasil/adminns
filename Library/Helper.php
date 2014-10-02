@@ -1,7 +1,12 @@
 <?php
 // ESTATICA
 class Helper {
-    public static function timestampToDate($string,$hours='false') {
+    public static function dbToDate($string) {
+        $tmp = $string != ""?$string:"00-00";
+        $tmp = explode("-",$tmp);
+        return count($tmp)==3?$tmp[2]."/".$tmp[1]."/".$tmp[0]:"";
+    }
+    public static function timestampToDate($string,$hours=false) {
         $tmp = explode(" ",$string);
         $date = explode("-",$tmp[0]);
         $hour = explode(":",$tmp[1]);
