@@ -12,7 +12,6 @@ class FormHelper {
     const DATE = "/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/";
     const TIME = "/[0-9]{2}\:[0-9]{2}/";
     const DATE_TIME = "/[0-9]{2}\/[0-9]{2}\/[0-9]{4} [0-9]{2}\:[0-9]{2}/";
-
     public static function create($id = "MyForm", $action = "", $options = array()) {
         self::$formName = $id;
         $html = '<section id="' . $id . '_section">' . "\n";
@@ -148,7 +147,29 @@ class FormHelper {
         $opt = array_merge($options, $pass);
         self::input($idName, $label, $value, $opt);
     }
-
+    public static function textarea($idName,$label = '',$value='',$options=array()) {
+        $html = "<div class='row'><div class='col-md-12'>";
+        $html .= '<div class="form-group ' . $idName . '_group">' . "\n";
+        if ($label != '') {
+            $html .= '<label for="' . $idName . '">' . $label . '</label>' . "\n";
+        }
+        $html .= "<textarea id='$idName' name='$idName' class='form-control' ";
+        if(!isset($options['cols'])) {
+            $options['cols'] = 50;
+        }
+        if(!isset($options['rows'])) {
+            $options['rows'] = 2;
+        }
+        if(isset($options['class'])) {
+            $html .= $options['class'];
+            unset($options['class']);
+        }
+        $html .= "' ";
+        $html .= Helper::printParams($options).">";
+        $html .= $value;
+        $html .= "</textarea></div></div>";
+        echo $html;
+    }
     public static function submit($id, $label = "Enviar", $options = array()) {
         if (!isset(self::$formName)) {
             die("Utilize o FormHelper::create()");
@@ -267,7 +288,7 @@ class FormHelper {
         }
         echo $html;
     }
-    public static function selectFromTable($tableField,$description,$label="",$value='',$options=array()) {
+    public static function selectFromTable($tableField,$description,$label=false,$value='',$options=array()) {
         $cols = explode(".",$tableField);
         $table = $cols[0];
         $field = $cols[1];

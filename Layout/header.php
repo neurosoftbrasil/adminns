@@ -28,18 +28,24 @@
                 <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
                     <? if(Session::isLogged()) { // dependentes de login?>
                     <ul class="nav navbar-nav">
+                        <? if(Session::hasPermission('cliente',Session::VISUALIZAR)) { ?>
+                            <li class='<?=Request::get('controller')=="cliente"?'active':'';?>'>
+                                <a href="<?=Helper::link('cliente')?>">Cliente</a>
+                            </li>
+                        <? } ?>
                         <? if(Session::hasPermission('pedido',Session::VISUALIZAR)) { ?>
-                            <li class="active">
+                            <li class='<?=Request::get('controller')=="pedido"?'active':'';?>'>
                                 <a href="<?=Helper::link('pedido')?>">Pedido</a>
                             </li>
                         <? } ?>
                         <? if(Session::hasPermission('suporte',Session::VISUALIZAR)) { ?>
-                            <li class="active">
+                            <li class='<?=Request::get('controller')=="suporte"?'active':'';?>'>
                                 <a href="<?=Helper::link('suporte')?>">Suporte</a>
                             </li>
                         <? } ?>
+                        
                         <? if(Session::hasPermission('usuario',Session::EXCLUIR)) { ?>
-                            <li>
+                            <li class='<?=Request::get('controller')=="usuario"?'active':'';?>'>
                                 <a href="<?=Helper::link('usuario')?>">Usuários</a>
                             </li>
                         <? } ?>
