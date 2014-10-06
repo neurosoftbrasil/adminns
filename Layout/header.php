@@ -10,7 +10,10 @@
         <?= Helper::js("jquery-1.11.1.min"); ?>
         <?= Helper::js("bootstrap.min"); ?>
         <?= Helper::js("App"); ?>
-        <script type="text/javascript"> App.BasePath = "/<?=APP_DIR?>";</script>
+        <script type="text/javascript">
+            App.BasePath = "/<?=APP_DIR?>";
+            App.SiteKey = "<?=Session::getId()?>";
+        </script>
     </head>
     <body>
         <? if(Session::isLogged()) {?><span class="logado"><small>Você está logado como <strong><?=Session::get('name')?></strong></small></span><?}?>

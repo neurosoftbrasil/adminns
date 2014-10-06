@@ -12,6 +12,7 @@ class FormHelper {
     const DATE = "/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/";
     const TIME = "/[0-9]{2}\:[0-9]{2}/";
     const DATE_TIME = "/[0-9]{2}\/[0-9]{2}\/[0-9]{4} [0-9]{2}\:[0-9]{2}/";
+    
     public static function create($id = "MyForm", $action = "", $options = array()) {
         self::$formName = $id;
         $html = '<section id="' . $id . '_section">' . "\n";
@@ -56,7 +57,7 @@ class FormHelper {
         echo $html;
     }
     public static function typeAhead($idName,$label,$ajaxPath,$options) {
-        ?><div class="form-group cliente_group">
+    ?><div class="form-group cliente_group">
         <label for="<?=$idName?>"><?=$label?></label><br/>
         <input id="<?=$idName?>" class="form-control <? 
             if(isset($options['class'])) {

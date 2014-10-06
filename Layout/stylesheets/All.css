@@ -213,3 +213,7 @@ h1.half {
     margin:0;
     padding:0;
 }
+#enderecosLista {
+    list-style:none;
+    padding-left:10px;
+}

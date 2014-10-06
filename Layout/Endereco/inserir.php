@@ -18,6 +18,9 @@
             'onkeyup'=>'App.Endereco.BuscarCep(this.value)'
         ));
         ?>
+                </div><br/>
+                <div id="cepinvalido" class="col-md-5 well-sm alert-danger hide">
+                    <span class="glyphicon glyphicon-remove-circle"></span> CEP inválido.
                 </div>
             </div>
             <div class="row">

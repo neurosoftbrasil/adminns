@@ -2,18 +2,30 @@
 <?
 $nome = Request::value('nome');
 $documento = Request::value('documento');
-FormHelper::create('formCliente');
-FormHelper::input('nome','Nome',$nome,array(
+$site = Request::value('site');
+
+FormHelper::create('formCliente','endereco');
+FormHelper::input('nome','Nome <strong>*</strong>',$nome,array(
     'placeholder'=>'Digite o nome do cliente'
 ));
-FormHelper::input('documento',"Documento (CPF/CNPJ)",$documento,array(
-    'placeholder'=>'Digite o documento'
+FormHelper::input('documento',"Documento (CPF/CNPJ) <strong>*</strong>",$documento,array(
+    'placeholder'=>'Digite o documento',
+    'onkeyup'=>'App.Util.FormatarDocumento(this)'
+));
+FormHelper::input('site',"Site <strong>*</strong>",$site,array(
+    'placeholder'=>'www.site.com'
 ));
 ?>
-    <div class="row marginbottom">
-        <div class="col-md-12">
-            <a href="/<?=APP_DIR?>service/endereco/inserir" data-toggle="modal" data-target="#remoteModal" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Adicionar endereço</a> 
-        </div>
-    </div>
+<div class="well-sm alert-danger hide">
+    Há problemas no formulário
+</div>
 <?
-FormHelper::end();
+FormHelper::submit('formClienteSubmit', "Adicionar endereços <span class='glyphicon glyphicon-chevron-right'></span> ", array(
+    'class'=>'btn-primary btn-lg',
+    'onclick'=>'App.Cliente.Submit()',
+    'type'=>'button'
+));
+?>
+<script type="text/javascript">
+    App.Cliente.Recuperar();
+</script>
