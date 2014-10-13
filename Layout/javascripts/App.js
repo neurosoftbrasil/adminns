@@ -122,8 +122,20 @@ App = {
             Documento:"",
             Site:""
         },
-        SalvarEndereco:function() {
+        Buscar : function() {
+            var pesq = $('#buscarCliente').val();
+            console.log(pesq);
+            $.post(App.BasePath+'service/cliente/buscar',{"pesquisa":pesq},function(data) {
+                $('#listaCliente').html(data);
+            });
+        },
+        SalvarEndereco:function(id) {
             var Cliente = App.Util.LerCookie('cliente');
+            var ident = id || false;
+            if(ident) {
+                Cliente.id = ident;
+                App.Util.EscreverCookie('cliente',Cliente);
+            }
             if(Cliente.enderecos.length == 0) {
                 $('#errorMessage').removeClass('hide');
                 $('#errorMessage').html('O cliente deve ter pelo menos um endereço.');
@@ -158,17 +170,185 @@ App = {
                 if(Cliente && Cliente.enderecos) {
                     App.Cliente.Info.enderecos = Cliente.enderecos;
                 }
+                if(Cliente && Cliente.enderecos) {
+                    App.Cliente.Info.contatos = Cliente.contatos;
+                }
                 App.Util.EscreverCookie('cliente',App.Cliente.Info);
                 $('#formCliente').submit();
             }
+        },
+        Salvar : function() {
+            var cliente = App.Util.LerCookie('cliente');
+            console.log(cliente);
+            $.post(App.BasePath+'service/cliente/salvar',cliente,function(data) {
+                var j = JSON.parse(data);
+                if(j.status == "success" && j.redirect) {
+                    location.href = j.redirect;
+                }
+            });
         }
     },
-    Endereco: {
+    Contato : {
+        Email:[],
+        Telefone:[],
+        Remover : function(num) {
+            var cliente = App.Util.LerCookie('cliente');
+            var contatos = cliente.contatos, cont = [];
+            for(var i=0;i<contatos.length;i++) {
+                if(i != num) {
+                    cont.push(contatos[i]);
+                }
+            }
+            cliente.contatos = cont;
+            App.Util.EscreverCookie('cliente',cliente);
+            this.Rendenizar();
+        },
+        EmailTemplate : function (num) {
+            return ''+
+            '<div class="form-group email_group email_'+num+'">'+
+            '<input id="email'+num+'" class="form-control inputTypeAhead" type="text"'+
+            'placeholder="Digite o e-mail"  value="" name="email'+num+'" onblur="App.Contato.SalvarEmail(this)"/>'+
+            '</div>';
+        },
+        AdicionaEmail : function() {
+            if($("#email"+this.Email.length).val() != "") {
+                $('#email').append(this.EmailTemplate(this.Email.length));
+            }
+        },
+        SalvarEmail : function(obj) {
+            var email = $(obj).val();
+            if(email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+                var emails = [];
+                for(var i=0;i<this.Email.length;i++) {
+                    if(email != this.Email[i]) {
+                        emails.push(this.Email[i]);
+                    }
+                }
+                this.Email = emails;
+                this.Email.push(email);
+            } else {
+                $(obj).val('');
+                $(obj).focus();
+            }
+        },
+        TelefoneTemplate : function (num) {
+            return ''+
+            '<div class="form-group telefone_group telefone_'+num+'">'+
+            '<input id="telefone'+num+'" class="form-control inputTypeAhead" type="text"'+
+            'placeholder="+55 (00) 0000-00000"  value="" name="telefone'+num+'" onblur="App.Contato.SalvarTelefone(this)"/>'+
+            '</div>';
+        },
+        AdicionaTelefone : function() {
+            if($("#telefone"+this.Telefone.length).val() != "") {
+                $('#telefone').append(this.TelefoneTemplate(this.Telefone.length));
+            }
+        },
+        SalvarTelefone : function(obj) {
+            var tel = $(obj).val();
+            if($.trim(tel) != "") {
+                var tels = [];
+                for(var i=0;i<this.Telefone.length;i++) {
+                    if(tel != this.Telefone[i]) {
+                        tels.push(this.Telefone[i]);
+                    }
+                }
+                this.Telefone = tels;
+                this.Telefone.push(tel);
+            } else {
+                $(obj).val('');
+                $(obj).focus();
+            }
+        },
+        Rendenizar : function() {
+            var cookie = App.Util.LerCookie('cliente');
+            var ct = cookie.contatos;
+            
+            var html = "";
+            for(var i=0;i<ct.length;i++) {
+                html += "<div class='col-md-12'><li><b>"+ct[i].nome+"</b></div>";
+                html += "<div class='col-md-2'><h6>E-mails:</h6>";
+                html += "<ul>";
+                var c = ct[i];
+                for(var j=0;j<c.emails.length;j++) {
+                    html += "<li>"+c.emails[j]+"</li>";
+                }
+                html += "</ul></div>";
+                html += "<div class='col-md-2'><h6>Telefones:</h6>";
+                html += "<ul>";
+                for(var j=0;j<c.tels.length;j++) {
+                    html += "<li>"+c.tels[j]+"</li>";
+                }
+                html += "</ul><br/>";
+                html += "<a href='javascript:void(0)' onclick='App.Contato.Remover("+i+")'>Remover</a>";
+                html += "</div>";
+            }
+            $("#contatosLista").html(html);
+        },
+        Salvar : function () {
+            var errors = [];
+            var obj = {};
+            obj.nome = $('#nome').val();
+            obj.cargo = $('#cargo').val();
+            obj.aniversario = $("#aniversario").val();
+            obj.contato_tipo_id = $('#contato_tipo_id').val();
+            obj.cliente_endereco_id = $('#cliente_endereco_id').val();
+            obj.referencia = $('#referencia').val();
+            obj.complemento = $('#complemento').val();
+            
+            if($.trim(obj.nome) == "") {
+                errors.push("nome");
+            }
+            if($.trim(obj.contato_tipo_id) == 0) {
+                errors.push("contato_tipo_id");
+            }
+            if(this.Email.length==0) {
+                errors.push('email0');
+            }
+            if(this.Telefone.length==0) {
+                errors.push('telefone0');
+            }
+            if(errors.length == 0) {
+                obj.emails = [];
+                obj.tels = [];
+                for(var i=0;i<this.Email.length;i++) {
+                    obj.emails.push($("#email"+i).val());
+                }
+                for(var i=0;i<this.Telefone.length;i++) {
+                    obj.tels.push($('#telefone'+i).val());
+                }
+                var cookie = App.Util.LerCookie('cliente');
+                if(!cookie.contatos) {
+                    cookie.contatos = [];
+                }
+                var cont = [];
+                
+                for(var i=0;i<cookie.contatos.length;i++) {
+                    if(
+                       obj.nome != cookie.contatos[i].nome &&
+                       obj.contato_tipo_id != cookie.contatos[i].contato_tipo_id &&
+                       obj.cliente_endereco_id != cookie.contatos[i].cliente_endereco_id
+                    ) {
+                        cont.push(cookie.contatos[i]);
+                    }
+                }
+                cookie.contatos = cont;
+                cookie.contatos.push(obj);
+                App.Util.EscreverCookie('cliente',cookie);
+                App.Contato.Rendenizar();
+            } else {
+                $('.form-group').removeClass('has-error');
+                $('.'+errors[0]+'_group').addClass('has-error');
+                $('#'+errors[0]).focus();
+            }
+        }
+    },
+    Endereco : {
         Salvar : function() {
             $('#errorMessage').removeClass('hide');
             $('#errorMessage').addClass('hide');
             var erros = [];
             var Cliente = App.Util.LerCookie('cliente');
+
             if(!Cliente.enderecos) {
                 Cliente.enderecos = [];
             }
@@ -178,25 +358,54 @@ App = {
             obj.logradouro = $("#logradouro").val();
             obj.numero = $("#numero").val();
             obj.cep = $("#cep").val();
-            obj.observacao = $("#referencia").val();
+            obj.referencia = $("#referencia").val();
+            obj.complemento = $("#complemento").val();
             obj.cidade = $("#cidade").val();
             obj.estado = $("#estado").val();
             obj.bairro = $("#bairro").val();
+            obj.cliente_endereco_tipo_id = $("#cliente_endereco_tipo_id").val();
             
-            var newlista = [];
-            for(var i=0;i<lista.length;i++) {
-                if(
-                    obj.logradouro != lista[i].logradouro &&
-                    obj.numero != lista[i].numero &&
-                    obj.cep != lista[i].cep
-                ) {
-                    newlista.push(lista[i]);
-                }
+            if($.trim(obj.logradouro) == "") {
+                erros.push('logradouro');
             }
-            Cliente.enderecos = newlista;
-            Cliente.enderecos.push(obj);
-            if(Cliente.enderecos.length != 0) {
-                App.Util.EscreverCookie('cliente',Cliente);
+            if($.trim(obj.numero) == "") {
+                erros.push('numero');
+            }
+            if($.trim(obj.cep) == "") {
+                erros.push('cep');
+            }
+            if($.trim(obj.cidade) == "") {
+                erros.push('cidade');
+            }
+            if($.trim(obj.estado) == "") {
+                erros.push('estado');
+            }
+            if($.trim(obj.bairro) == "") {
+                erros.push('bairro');
+            }
+            if(obj.cliente_endereco_tipo_id == "0") {
+                erros.push('cliente_endereco_tipo_id');
+            }
+            if(erros.length==0) {
+                var newlista = [];
+                for(var i=0;i<lista.length;i++) {
+                    if(
+                        obj.logradouro != lista[i].logradouro &&
+                        obj.numero != lista[i].numero &&
+                        obj.cep != lista[i].cep
+                    ) {
+                        newlista.push(lista[i]);
+                    }
+                }
+            
+                Cliente.enderecos = newlista;
+                Cliente.enderecos.push(obj);
+            
+                if(Cliente.enderecos.length != 0) {
+                    App.Util.EscreverCookie('cliente',Cliente);
+                }
+            } else {
+                $('#'+erros[0]).focus();
             }
             this.Rendenizar();
         },

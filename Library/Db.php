@@ -31,7 +31,7 @@ AND COLUMN_NAME = '".$column."_id'";
         }
         return $this->query($query,$unique);
     }
-    public function query($str,$unique = false,$format=PDO::FETCH_ASSOC) {
+    public function query($str,$unique = false,$format=PDO::FETCH_ASSOC,$getvalue=false) {
         preg_match("/(insert)|(update)|(delete)|(select)/", strtolower($str),$operation);
         try {
             switch($operation[0]) {
@@ -40,6 +40,13 @@ AND COLUMN_NAME = '".$column."_id'";
                     $stmt = $this->conn->prepare($str);
                     $stmt->execute();
                     $res = $stmt->fetchAll($format);
+                    if($getvalue) {
+                        $retorno = array();
+                        foreach($res as $r) {
+                            array_push($retorno,$r[$getvalue]);
+                        }
+                        return $retorno;
+                    }
                     if($unique && count($res)==1) {
                         return $res[0];
                     }

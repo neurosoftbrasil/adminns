@@ -1,15 +1,24 @@
 <div class="modal-header"><h2>Inserir endereço</h2></div>  
 <div class="modal-body">
     <?
+        
         $cep = Request::value('cep');
         $logradouro = Request::value('logradouro');
         $numero = Request::value('numero');
         $bairro = Request::value('bairro');
+        $cliente_endereco_tipo_id = Request::value('cliente_endereco_tipo_id');
         $cidade = Request::value('cidade');
         $estado = Request::value('estado');
         
         FormHelper::create('formEndereco');
         ?>
+            <div class="row">
+                <div class="col-md-12">
+                    <?
+                        FormHelper::selectFromTable('cliente_endereco_tipo.id', 'descricao', 'Tipo de contato',$cliente_endereco_tipo_id);
+                    ?>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-5">
         <?
@@ -65,8 +74,16 @@
         ?>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
         <?
+        FormHelper::textarea('complemento',"Complemento");
+        ?>
+                </div>
+                
+            <?
         FormHelper::textarea('referencia',"Referência / observação");
+        ?></div><?
         FormHelper::end(false);
     ?>
 </div>
