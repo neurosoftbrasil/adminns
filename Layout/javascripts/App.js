@@ -191,6 +191,10 @@ App = {
     Contato : {
         Email:[],
         Telefone:[],
+        Editar : function(num) {
+            $("#remoteModal .modal-content").load(App.BasePath+"/service/contato/editar/"+num);
+            $("#remoteModal").modal();
+        },
         Remover : function(num) {
             var cliente = App.Util.LerCookie('cliente');
             var contatos = cliente.contatos, cont = [];
@@ -262,25 +266,29 @@ App = {
         Rendenizar : function() {
             var cookie = App.Util.LerCookie('cliente');
             var ct = cookie.contatos;
-            
             var html = "";
             for(var i=0;i<ct.length;i++) {
-                html += "<div class='col-md-12'><li><b>"+ct[i].nome+"</b></div>";
-                html += "<div class='col-md-2'><h6>E-mails:</h6>";
+                html += "<div class='hover'><div class='col-md-12'><li><b>"+ct[i].nome+"</b>";
+                
+                html += "</div>";
+                html += "<div class='col-md-6'><h6>E-mails:</h6>";
                 html += "<ul>";
                 var c = ct[i];
                 for(var j=0;j<c.emails.length;j++) {
                     html += "<li>"+c.emails[j]+"</li>";
                 }
                 html += "</ul></div>";
-                html += "<div class='col-md-2'><h6>Telefones:</h6>";
+                html += "<div class='col-md-6'><h6>Telefones:</h6>";
                 html += "<ul>";
                 for(var j=0;j<c.tels.length;j++) {
                     html += "<li>"+c.tels[j]+"</li>";
                 }
                 html += "</ul><br/>";
-                html += "<a href='javascript:void(0)' onclick='App.Contato.Remover("+i+")'>Remover</a>";
                 html += "</div>";
+                html += "<div style='clear:both'>";
+                html += "<a style='margin:0 5px' href='javascript:void(0)' class='btn btn-default btn-sm' onclick='App.Contato.Editar(\""+ct[i].id+"\")'><span class='glyphicon glyphicon-pencil'></span> Editar</a>";
+                html += "<a href='javascript:void(0)' class='btn btn-default btn-sm' onclick='App.Contato.Remover("+i+")'><span class='glyphicon glyphicon-pencil'></span> Remover</a>";
+                html += "</div></div>";
             }
             $("#contatosLista").html(html);
         },
@@ -335,6 +343,8 @@ App = {
                 cookie.contatos.push(obj);
                 App.Util.EscreverCookie('cliente',cookie);
                 App.Contato.Rendenizar();
+                
+                $("#remoteModal").modal('hide');
             } else {
                 $('.form-group').removeClass('has-error');
                 $('.'+errors[0]+'_group').addClass('has-error');

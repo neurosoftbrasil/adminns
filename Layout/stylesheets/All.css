@@ -19,6 +19,8 @@ header .container ul.nav {
     color:#999;
     padding:1px 20px 11px 20px;
     min-height:535px;
+    display: inline-block;
+    width:100%;
 }
 #content section {
     color:#333;
@@ -216,4 +218,18 @@ h1.half {
 #enderecosLista,#enderecosLista ul , #contatosLista, #contatosLista ul {
     list-style:none;
     padding-left:10px;
+}
+.hover {
+    display:table;
+    padding:20px;
+    border-radius:3px;
+}
+.hover:hover {
+    background:#fff;
+}
+.panel-default tr{
+    border-bottom:1px solid #999;
+}
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {  
+    padding: 7px;
 }

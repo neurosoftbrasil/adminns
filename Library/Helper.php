@@ -16,6 +16,57 @@ class Helper {
         }
         return $date[2]."/".$date[1]."/".$date[0].$hour;
     }
+    public static function formatValor($str) {
+        $num = $str;
+        $num = explode(".",$num);
+        $number = "";
+        
+        if(count($num)>1) {
+            $number .= ",".str_pad($num[1],2,"0");
+        } else {
+            $number .= ",00";
+        }
+        $tmp = "";
+        if(count($num)>1) {
+            $num = $num[0];
+        }
+        $counter = 0;
+        for($i=strlen($num)-1;$i>=0;$i--) {
+            $tmp = $num{$i}.$tmp;
+            $counter++;
+            if($counter == 3) {
+                $counter = 0;
+                $tmp = ".".$tmp;
+            }
+        }
+        $tmp .= $number;
+        return "R$ " . $tmp;
+    }
+    public static function formatDocumento($str) {
+        $doc = str_replace(".","",trim($str));
+        $doc = str_replace("-","",$doc);
+        $doc = str_replace("/","",$doc);
+        $ret = "";
+        switch(strlen($doc)) {
+            case 11:
+                $ret .= substr($doc,0,3).".";
+                $ret .= substr($doc,4,3).".";
+                $ret .= substr($doc,7,3)."-";
+                $ret .= substr($doc,9,2);
+            break;
+            case 14:
+                $ret .= substr($doc,0,2).".";
+                $ret .= substr($doc,2,3).".";
+                $ret .= substr($doc,6,3)."/";
+                $ret .= substr($doc,9,3)."-";
+                $ret .= substr($doc,12,2);
+            break;
+            default:
+                $ret = $str;
+            break;
+        }
+        return $ret;
+    }
     public static function dateToTimestamp($string,$fillHours) {
         $date = explode("-",$string);
         $hour = "";

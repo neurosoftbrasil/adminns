@@ -25,15 +25,21 @@ class ClienteController extends SecureController {
     public function buscar() {
         $pesq = Request::value('pesquisa');
         global $db;
-        $clientes = "select distinct c.id, c.nome, cc.nome as nomecontato, ct.telefone, ce.email from cliente c, contato cc, contato_telefone ct, contato_email ce where c.id = cc.cliente_id and c.id = ct.cliente_id and c.id = ce.cliente_id and c.nome like '$pesq%'  limit 50";
+        if(preg_match("/[0-9]+/",$pesq)) {
+            $condicao = "c.documento like '$pesq%'";
+        } else {
+            $condicao = "c.nome like '$pesq%'";
+        }
+        $clientes = "select distinct c.id,c.documento, c.nome, cc.nome as nomecontato, ct.telefone, ce.email from cliente c, contato cc, contato_telefone ct, contato_email ce where c.id = cc.cliente_id and c.id = ct.cliente_id and c.id = ce.cliente_id and $condicao  limit 50";
         $clientes = $db->query($clientes);
         foreach ($clientes as $c) {
             ?>
             <tr>
                 <td><a href='<?= '/' . APP_DIR . "cliente/editar/" . $c['id']; ?>'><?= $c['nome'] ?></a></td>
-                <td class="mobile-min"><?= $c['nomecontato'] ?></td>
-                <td class="mobile-half"><?= $c['email'] ?></td>
-                <td class="mobile"><?= $c['telefone'] ?></td>
+                <td><?= $c['nomecontato'] ?></td>
+                <td><?= Helper::formatDocumento($c['documento'])?></td>
+                <td><?= $c['email'] ?></td>
+                <td><?= $c['telefone'] ?></td>
             </tr>
             <?
         }
@@ -76,7 +82,7 @@ class ClienteController extends SecureController {
         }
         $enderecos = $p['enderecos'];
         $enderecoIDs = array();
-        $delQuery = "delete from contato_endereco where cliente_id=" . $clienteId;
+        $delQuery = "delete from cliente_endereco where cliente_id=" . $clienteId;
         $db->query($delQuery);
 
 
