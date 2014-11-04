@@ -28,7 +28,7 @@ class ClienteController extends SecureController {
         if(preg_match("/[0-9]+/",$pesq)) {
             $condicao = "c.documento like '$pesq%'";
         } else {
-            $condicao = "c.nome like '$pesq%'";
+            $condicao = "c.nome like '%".Helper::prepareForLike($pesq)."%'";
         }
         $clientes = "select distinct c.id,c.documento, c.nome, cc.nome as nomecontato, ct.telefone, ce.email from cliente c, contato cc, contato_telefone ct, contato_email ce where c.id = cc.cliente_id and c.id = ct.cliente_id and c.id = ce.cliente_id and $condicao  limit 50";
         $clientes = $db->query($clientes);

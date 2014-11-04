@@ -24,10 +24,13 @@ class SuporteController extends SecureController {
         if($notafiscal) {
             $qpedido .= " and p.num_nf like '".$notafiscal."%'";
         }
-        $query  = "select protocolo,suporte_cliente.cliente_id, suporte_cliente.nome,cpf,p.num_nf,p.data_nf,ss.nome as status from (select c.*,s.protocolo,s.status,s.pedido from suporte s, clientes c where c.cliente_id = s.cid $qclientes) as suporte_cliente ".($qpedido!=""?"inner":"left")." join pedido p on (suporte_cliente.pedido = p.ped_id $qpedido) left join suporte_status ss on (suporte_cliente.status = ss.status_id)";
-        $query .= " limit 100";
+        $query  = "select * from suporte limit 1";
+        Util::prints($dbo->query($query));
+        $query = "select * from pedido where numero = 397";
+        Util::prints($dbo->query($query));
         
-        $results = $dbo->query($query);
+        $results = array();
+        
         $html = "";
         
         foreach($results as $r) {

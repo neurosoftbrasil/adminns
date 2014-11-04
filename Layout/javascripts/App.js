@@ -63,13 +63,13 @@ App = {
             } else {
                 number += ",00";
             }
-            number = frac[0]
-            .replace(/([0-9]{3}$)/g,".$1") // mil
-            .replace(/([0-9]{3}\.)/,".$1") // milhão
-            .replace(/([0-9]{3}\.)/,".$1") // bilhão
-            .replace(/([0-9]{3}\.)/,".$1") // trilhão
-            + number;
-            return "R$ " + number;
+            num = frac[0];
+            if(num.length>4) {
+                num = num.replace(/(\d+)(\d{3})/,"$1.$2");
+                num = num.replace(/(\d+)(\d{3})/,"$1.$2");
+                num = num.replace(/(\d+)(\d{3})/,"$1.$2");
+            }
+            return "R$ " + num + number;
         },
         Pad:function(n,width,left) {
             var num = (n+'').substr(0,width), left = left || false;
@@ -108,8 +108,6 @@ App = {
             confirmModal.modal('show');
         }
     },
-    Usuario: {},
-    Perfil: {},
     Cliente: {
         Recuperar:function() {
             var json = App.Util.LerCookie('cliente');
@@ -410,14 +408,16 @@ App = {
             
                 Cliente.enderecos = newlista;
                 Cliente.enderecos.push(obj);
-            
                 if(Cliente.enderecos.length != 0) {
                     App.Util.EscreverCookie('cliente',Cliente);
                 }
+                $("#remoteModal").modal('hide');
+                this.Rendenizar();
             } else {
                 $('#'+erros[0]).focus();
+                this.Rendenizar();
             }
-            this.Rendenizar();
+            console.log(Cliente);
         },
         Rendenizar:function() {
             var Cliente = App.Util.LerCookie('cliente');
@@ -476,5 +476,9 @@ App = {
                 });
             }
         }
-    }
+
+    },
+    Usuario: {},
+    Perfil: {},
+    Pedido : {}
 }

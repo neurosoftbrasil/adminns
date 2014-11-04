@@ -75,6 +75,10 @@ class Helper {
         }
         return $date[2]."-".$date[1]."-".$date[0].$hour;
     }
+    public static function prepareForLike($str) {
+        $tmp = explode(" ",$str);
+        return implode("%",$tmp);
+    }
     public static function controllerName($str) {
         return ucwords($str)."Controller";
     }

@@ -89,7 +89,7 @@
 </div>
 <div class="modal-footer">  
     <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="App.Endereco.Salvar()">Salvar</button>
+    <button type="button" class="btn btn-primary" onclick="App.Endereco.Salvar()">Salvar</button>
 </div>
 <script type="text/javascript">
     $("#formEndereco")[0].reset();

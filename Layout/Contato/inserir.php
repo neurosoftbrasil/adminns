@@ -1,4 +1,4 @@
-<div class="modal-header"><h2>Inserir contato</h2></div>  
+<div class="modal-header"><h2>Inserir contato</h2></div>
 <div class="modal-body">
     <?
         $nome = Request::value('nome');

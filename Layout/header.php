@@ -16,10 +16,19 @@
         </script>
     </head>
     <body>
-        <? if(Session::isLogged()) {?><span class="logado"><small>Você está logado como <strong><?=Session::get('name')?></strong></small></span><?}?>
         <header id="top" class="navbar navbar-static-top bs-docs-nav" role="banner">
+            <div class="top">
+                <h1>
+                    <a href="<?="/".APP_DIR?>"> Neurosoft </a>
+                </h1>
+                <? if(Session::isLogged()) {?><span class="padding greeting"><span class="mobile-min">Bem-vindo </span><?=Session::get('name')?></span>
+                <span class="padding right">
+                    <a class="button topright" href="<?=Helper::link('login/logout')?>">Sair</a>
+                </span>
+                <?}?>
+            </div>
             <div class="container">
-                <div class="navbar-header">
+                <? /*<div class="navbar-header">
                     <button class="navbar-toggle collapsed" data-target=".bs-navbar-collapse" data-toggle="collapse" type="button">
                         <span class="sr-only">Trocar Navegação</span>
                         <span class="icon-bar"></span>
@@ -28,6 +37,7 @@
                     </button>
                     <a class="navbar-brand" href="<?=Helper::link()?>">Neurosoft</a>
                 </div>
+                
                 <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
                     <? if(Session::isLogged()) { // dependentes de login?>
                     <ul class="nav navbar-nav">
@@ -59,16 +69,23 @@
                             <a href="<?=Helper::link('perfil')?>">Meu Perfil</a>
                         </li>
                         <li>
-                            <a href="<?=Helper::link('login/logout')?>" class="btn-sair">Sair</a>
+
+                            <a?>" class="">Sair</a>
                         </li>
                     </ul>
                     <? } ?>
                 </nav>
+                */?>
             </div>
         </header>
         <style type="text/css">
-            header .navbar-brand {
-                background:url("/<?=APP_DIR.VIEW_DIR."images/logo_".Config::$app.".png"?>");
-            }
+        div.top h1 a{
+            display:block;
+            float:left;
+            width:41px;
+            height:41px;
+            background:url(<?="/".APP_DIR;?>Layout/images/logo.gif) no-repeat;
+            text-indent:-999em;
+        }
         </style>
         <div id="content" role="content">

@@ -5,6 +5,42 @@ class PedidoController extends SecureController {
     public static function inserir() {
         $pedidoLista = new Pedido();
     }
+    public static function editar() {
+        
+    }
+    public static function buscar() {
+            global $db;
+            $condicao = "";
+            $pesquisa = Request::value('pesquisa');
+            $pedidos = "select *,p.id as pedido_id,(select descricao from pedido_status where p.id = pedido_status.id) as pedido_status from cliente c, pedido p where c.id = p.cliente_id limit 50";
+            if(preg_match("/^[0-9]+$/",$pesquisa)) {
+                $pedidos = "select *,p.id as pedido_id,(select descricao from pedido_status where p.id = pedido_status.id) as pedido_status from cliente c, pedido p, pedido_notafiscal n where c.id = p.cliente_id and n.numero like '$pesquisa%' limit 50";
+            } else if(trim($pedidos) != ""){
+                $pesquisa = Helper::prepareForLike($pesquisa);
+                $pedidos = "select *,p.id as pedido_id,(select descricao from pedido_status where p.id = pedido_status.id) as pedido_status from cliente c, pedido p where c.id = p.cliente_id and c.nome like '%$pesquisa%' limit 50";
+            }
+            $pedidos = $db->query($pedidos);
+            
+            foreach($pedidos as $p) {
+                $query = "select numero from pedido_notafiscal where pedido_id = ".$p['pedido_id'];
+                $nf = $db->query($query,true);
+        ?>
+        <tr>
+            <td><?=$p['pedido_id']?></td>
+            <td><?=$p['nome']." - ".Helper::formatDocumento($p['documento'])?></td>
+            <td><?=$p['pedido_status']?></td>
+            <td><?=$nf['numero']?></td>
+            <td><?=Helper::formatValor($p['valor'])?></td>
+            <td><?=Helper::timestampToDate($p['data'])?></td>
+        </tr>
+        <?
+            }
+            if(count($pedidos)==0) {
+                ?><tr>
+                    <td colspan="6">Não há resultados.</td>
+                </tr><?
+            }
+    }
     public static function buscarcliente() {
         global $db;
         $ret = array();

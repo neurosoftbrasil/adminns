@@ -20,6 +20,7 @@
     ?>
     <div id='enderecoEscolha'></div>
     <script type='text/javascript'>
+        
         $('#cliente').on('typeahead:selected', function(evt, item) {
             $('#clienteId').val(item.id);
             App.Pedido.Cliente = item;
@@ -63,3 +64,7 @@
     <?
     FormHelper::end(false);
 
+?>
+<script type="text/javascript">
+    App.Pedido.AdicionaProduto();
+</script>

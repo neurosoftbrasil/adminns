@@ -1,26 +1,23 @@
 <?Helper::js('App.Usuario'); ?>
-<div class="title">
-
-    <span class="align-right">
-        <button id="novoUsuario"
-                class="btn btn-default"
-                style="margin:6px"
-                onclick="javascript:location.href = '<?="/".APP_DIR."usuario/inserir"?>'"
-                >
-            <span class="glyphicon glyphicon-plus"></span>
-            Novo Usuário
-        </button>
-    </span>
-    <h1 class="half">Usuários</h1>
+<div class="sidebar left">
+    <div class="label btn-square usuarios">Usuários</div>
 </div>
-<div class="panel panel-default">
+<style type="text/css">
+    @media screen and (max-width: 520px) {
+        .btn-square.usuarios:before {
+            content:'';
+        }
+    }
+</style>
+<div class="content">
+<div class="panel-default">
     <table class="table">
         <thead>
             <tr>
                 <th style="width:5%">ID</th>
                 <th style="width:25%">Nome</th>
                 <th style="width:25%" class="mobile-half">E-mail</th>
-                <th style="width:10%" class="mobile-min">Ativo</th>
+                <th style="width:10%">Ativo</th>
                 <th style="width:200px" class="mobile">Acessado</th>
                 <th style="width:200px">Opções</th>
             </tr>
@@ -44,12 +41,9 @@
                 <td><?=$u['id']?></td>
                 <td><a href="<?=Helper::link('usuario/editar/'.$u['id'])?>"><?=$u['name']?></a></td>
                 <td class="mobile-half"><a href="<?=Helper::link('usuario/editar/'.$u['id'])?>"><?=$u['email']?></a></td>
-                <td class="mobile-min"><?=$u['active']==1?"Sim":"Não";?></td>
+                <td><?=$u['active']==1?"Sim":"Não";?></td>
                 <td class="mobile"><?=Helper::timestampToDate($u['lastlogin'])?></td>
-                <td><button type="button" class="btn btn-default btn-sm" onclick="App.Usuario.resetarSenha('<?=$u["name"]?>',<?=$u["id"]?>)">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        Resetar senha
-                    </button>
+                <td><a class="button button-sm" href="javascript:void(0)" onclick="App.Usuario.resetarSenha('<?=$u["name"]?>',<?=$u["id"]?>)">Resetar senha</a>
                 </td>
             </tr>
             <?
@@ -64,4 +58,5 @@
         </script>
         </tbody>
     </table>
+</div>
 </div>
