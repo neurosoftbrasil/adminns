@@ -7,6 +7,7 @@ class Helper {
         return count($tmp)==3?$tmp[2]."/".$tmp[1]."/".$tmp[0]:"";
     }
     public static function timestampToDate($string,$hours=false) {
+        if(!$string) return "00/00/0000";
         $tmp = explode(" ",$string);
         $date = explode("-",$tmp[0]);
         $hour = explode(":",$tmp[1]);
@@ -34,7 +35,7 @@ class Helper {
         for($i=strlen($num)-1;$i>=0;$i--) {
             $tmp = $num{$i}.$tmp;
             $counter++;
-            if($counter == 3) {
+            if($counter == 3 && $counter != strlen($num)) {
                 $counter = 0;
                 $tmp = ".".$tmp;
             }
@@ -97,7 +98,9 @@ class Helper {
     public static function printParams($arr) {
         $html = "";
         foreach($arr as $key => $value) {
-            $html .= $key."='".$value."' ";
+            if(gettype($value)=='string') {
+                $html .= $key."='".$value."' ";
+            }
         }
         return $html;
     }

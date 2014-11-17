@@ -62,9 +62,7 @@ body {
 .right {
     float:right;
 }
-.red {
-    color:#b60e32;
-}
+
 h1,h2,h3,h4,h5,h6 {
     color:#07c;
 }
@@ -92,8 +90,8 @@ header .container ul.nav {
 }
 #content {
     background: #f3f3f3;
-    color:#999;
-    /*padding:1px 20px 11px 20px;
+    /*color:#999;
+    padding:1px 20px 11px 20px;
     min-height:535px;*/
     display: inline-block;
     width:100%;
@@ -145,12 +143,12 @@ span.logado {
     width:100%;
 }
 @media screen and (max-width : 480px) {
-    .mobile-min {
+    select.mobile-min, input[type="text"].mobile-min, textarea.mobile-min,.mobile-min {
         display:none;
     }
 }
 @media screen and (max-width : 600px) {
-    .mobile-half {
+    select.mobile-half, input[type="text"].mobile-half, textarea.mobile-half,.mobile-half {
         display:none;
     }
 }
@@ -180,7 +178,7 @@ span.logado {
         width:100%;
         top:53px;
     }
-    .mobile {
+    select.mobile, input[type="text"].mobile, textarea.mobile,.mobile {
         display:none;
     }
 }
@@ -334,6 +332,7 @@ div.top h1 a{
     height:41px;
     background:url(../images/logo.gif) no-repeat;
     text-indent:-999em;
+    overflow:hidden;
 }
 
 div.top .greeting {
@@ -499,7 +498,7 @@ label.title {
     margin:15px 0 7px 0;
     display:block;
 }
-select, input[type=text], textarea {
+select, input[type=text],input[type=password],input[type=date],input[type=number], textarea {
     background:#fff;
     display:block;
     border:1px solid #ccc;
@@ -656,6 +655,9 @@ li {
 table.table tbody td {
     background:#fff;
 }
+table.table.transparent tbody td {
+    background: transparent;
+}
 .panel-default tr {
     border:0;
 }
@@ -679,4 +681,44 @@ table.table tbody td {
 }
 a:hover, a:focus {
     text-decoration: none;
+}
+.button-md {
+    padding:6px 10px;
+}
+table.table.inside {
+    margin-bottom:0;
+}
+table.table.inside tbody td{
+    background:#f8f8f8;
+}
+.row {
+    margin-right:0;
+}
+.label.btn-square.red {
+    background:#b60e32;
+}
+#loginForm_message {
+    margin-top:53px;
+}
+.bootstrap-dialog.type-primary .modal-header {
+    background-color: #07c;
+}
+#formSuporte_message {
+    clear:both;
+}
+.has-error select,
+.has-error input[type="text"],
+.has-error input[type="password"],
+.has-error input[type="date"],
+.has-error input[type="number"],
+.has-error textarea {
+    border-color: #a94442;
+}
+.has-error select:focus,
+.has-error input[type="text"]:focus,
+.has-error input[type="password"]:focus,
+.has-error input[type="date"]:focus,
+.has-error input[type="number"]:focus,
+.has-error textarea:focus {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 6px #ce8483;
 }

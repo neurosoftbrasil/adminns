@@ -44,7 +44,12 @@ class PedidoController extends SecureController {
     public static function buscarcliente() {
         global $db;
         $ret = array();
-        $query = "select id,nome as value from cliente where lower(nome) like '%".strtolower(Request::value('cliente'))."%' limit 10";
+        $cliente = Request::value('cliente');
+        if(preg_match("/^[0-9.\-]+$/",$cliente)) {
+            $query = "select id,concat(nome,' - ',documento) as value from cliente where documento like '".$cliente."%' limit 10";
+        } else {
+            $query = "select id,concat(nome,' - ',documento) as value from cliente where lower(nome) like '%".Helper::prepareForLike(strtolower(Request::value('cliente')))."%' limit 10";
+        }
         $clientes = $db->query($query);
         for($i=0;$i<count($clientes);$i++) {
             $query = "select logradouro,numero,complemento,bairro,cep,(select nome from cidade where id=ce.cidade_id) as cidade, (select uf from cidade where id=ce.cidade_id) as estado from cliente_endereco ce where cliente_id=".$clientes[$i]['id'];

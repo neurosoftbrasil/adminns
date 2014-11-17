@@ -15,7 +15,6 @@
     <script type="text/javascript">
     </script>
     <?
-    
     FormHelper::typeAhead('cliente','Cliente <b>*</b>','pedido/buscarcliente',array(
         'class'=>'inputTypeAhead',
         'placeholder'=>'Digite o nome do cliente',

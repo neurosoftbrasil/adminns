@@ -1,4 +1,18 @@
-<h1>Perfil</h1>
+<? echo Helper::js("App.Suporte");
+
+global $db;
+?>
+<div class="sidebar left">
+    <div class="label btn-square red perfil">Meu Perfil</div>
+</div>
+<style type="text/css">
+    @media screen and (max-width: 520px) {
+        .btn-square.perfil:before {
+            content:'';
+        }
+    }
+</style>
+<div class="content">
 <?
     global $db;
     
@@ -30,8 +44,9 @@
         'placeholder'=>'Repita a senha nova',
         'style'=>'max-width:400px'
     ));
+    ?><br/><?
     FormHelper::startGroup();
-    FormHelper::submitAjax("Salvar","salvar/".$u['id'],array('class'=>'btn-primary'));
+    FormHelper::submitAjax("Salvar","salvar/".$u['id'],array('class'=>'button'));
     FormHelper::endGroup();
     
     FormHelper::end();
@@ -39,3 +54,4 @@
 <script type="text/javascript">
     
 </script>
+</div>

@@ -7,5 +7,8 @@
 <footer class="bs-docs-footer" role="contentinfo">
     <h5>Neurosoft &copy; 2014</h5>
 </footer>
+<script type="text/javascript">
+    App.Events.Load();
+</script>
 </body>
 </html>

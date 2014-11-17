@@ -1,4 +1,9 @@
 App = {
+    Events: {
+        Load:function() {
+           
+        }
+    },
     BasePath : '',
     SiteKey : '',
     Util:{
