@@ -31,7 +31,7 @@ class Request {
 				}
 			}
 		}
-		self::$option = empty((array) $options)?NULL:$options;
+		self::$option = empty($options)?NULL:$options;
 	}
         public static function postEscaped() {
             $bind = array();
