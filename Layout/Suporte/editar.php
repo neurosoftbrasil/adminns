@@ -62,9 +62,10 @@ if ($contato) {
     $cont = $db->query("select nome from contato where id=" . $r['contato_id'], true);
     ?>
     <label>Cliente</label>
-    <br>
+    <br/>
     <?= $cont['nome'] ?>
-    <br>
+    <br/>
+    <input type="hidden" name="contato_id" id="contato_id" value="<?= $r['contato_id']?>"/>
     <?
     //FormHelper::selectFromTable('contato.id','nome','Contato',$r['contato_id'],array(),array('id'=>$r['contato_id']));
 } else {
@@ -128,7 +129,8 @@ FormHelper::end();
             <tr>
                 <td colspan="3">Ainda não há observações</td>
             </tr>
-<? } ?>
+        <? } ?>
     </tbody>
 </table>    
+    <a href="http://www.neurosoft.com.br/admns/pedido.php?novo=1" target="_blank">Adicionar pedido</a>
 </div>

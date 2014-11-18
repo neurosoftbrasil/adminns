@@ -11,7 +11,7 @@ class Helper {
         $tmp = explode(" ",$string);
         $date = explode("-",$tmp[0]);
         $hour = explode(":",$tmp[1]);
-        $hour = " - ".$hour[0].":".$hour[1];
+        $hour = " ".$hour[0].":".$hour[1];
         if(!$hours) {
             $hour = "";
         }

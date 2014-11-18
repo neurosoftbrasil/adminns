@@ -32,7 +32,7 @@ class Session {
             $id = $_SESSION[Session::getId()]['id'];
             $query = "select u.id,m.name,m.permission,um.level from user u, user_module um, module m where ";
             $query .= "u.id = um.user_id and m.id = um.module_id and u.id = $id and u.deleted=0 order by m.id desc";
-            $perms = $db->query($query);
+                $perms = $db->query($query);
             $tmp = array();
             foreach ($perms as $p) {
                 $tmp[$p['permission']] = array('level' => $p['level'], 'name' => $p['name']);

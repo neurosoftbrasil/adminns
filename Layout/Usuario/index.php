@@ -11,7 +11,8 @@
 </style>
 <div class="content">
 <div class="panel-default">
-    <table class="table">
+    <a href="/<?=APP_DIR?>/usuario/editar" class="button button-md">Novo usuário</a>
+    <table class="table" style="clear:right">
         <thead>
             <tr>
                 <th style="width:5%">ID</th>

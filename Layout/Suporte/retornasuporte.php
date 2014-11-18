@@ -55,12 +55,18 @@ if ($ident) {
                                 </tr>
                             </thead><tbody>
                                 <?
-                                $qprod = "select id,nome,
-                    garantia,
-                    kit,
-                    fabricante_id,
-                    (select f.descricao from fabricante f where fabricante_id = f.id) as fabricante
-                    from produto p where p.pedido_id=" . $p['id'] . "";
+                                $qprod = "select 
+                                    p.id,
+                                    p.nome,
+                                    p.garantia,
+                                    p.kit,
+                                    p.fabricante_id,
+                                    (select f.descricao from fabricante f where fabricante_id = f.id) as fabricante,
+                                    pp.id as ppid
+                                    from produto p, 
+                                    produto_pedido pp 
+                                    where pp.pedido_id=" . $p['id'] . " and p.id = pp.produto_id";
+                                
                                 $prods = $db->query($qprod);
                                 foreach ($prods as $d) {
                                     ?>
@@ -68,33 +74,35 @@ if ($ident) {
                                         <td> <?= ($d['kit'] > 0 ? "Kit " : "") . $d['nome'] ?></td>
                                         <td style='width:20%' class='mobile-min'><?= ($d['garantia'] != "" ? $d['garantia'] : "Sem informação") ?></td>
                                         <td class='mobile-half'><?= $d['fabricante'] ?></td>
-                                        <td><?= ($d['kit'] == 0 ? "<a class='button button-sm' onclick='App.Suporte.New(\"".$p['id']."\", \"".$k['id']."\", \"".$p['cliente_id']."\")'>Novo chamado</a>" : "") ?></td>
+                                        <td><?= ($d['kit'] == 0 ? "<a class='button button-sm' onclick='App.Suporte.New(\"" . $d['ppid'] . "\", \"" . $d['id'] . "\", \"" . $p['cliente_id'] . "\")'>Novo chamado</a>" : "") ?></td>
                                     </tr>
                                     <?
                                     if ($d['kit'] > 0) {
-                                        $qkit = "select id,nome,garantia,kit,
-                            fabricante_id,
-                            (select f.descricao from fabricante f where fabricante_id = f.id) as fabricante
-                            from produto p where produto_id=" . $d['id'] . "";
-
+                                        $qkit = "select 
+                                            p.id,
+                                            p.nome,
+                                            p.garantia,
+                                            (select f.descricao from fabricante f where p.fabricante_id = f.id) as fabricante 
+                                            from produto p where p.produto_id = ".$d['id'];
                                         $qkit = $db->query($qkit);
+                                        
                                         foreach ($qkit as $k) {
                                             ?><tr>
-                                                <td> &bull; <?= $k['nome'] ?></td>
-                                                <td style='width:20%' class='mobile-min'><?= $k['garantia'] ?></td>
-                                                <td class='mobile-half'><?= $k['fabricante'] ?></td>
-                                                <td><a class='button button-sm' onclick='App.Suporte.New("<?= $p['id'] ?>", "<?= $k['id'] ?>", "<?= $p['cliente_id'] ?>")'>Novo chamado</a></td>
+                                                <td> &bull; <?= $k['nome']; ?></td>
+                                                <td style='width:20%' class='mobile-min'><?= $k['garantia']==""?"Sem informação":$k['garantia']; ?></td>
+                                                <td class='mobile-half'><?= $k['fabricante']; ?></td>
+                                                <td><a class='button button-sm' onclick='App.Suporte.New("<?= $d['ppid'] ?>", "<?= $k['id'] ?>", "<?= $p['cliente_id'] ?>")'>Novo chamado</a></td>
                                             </tr><?
-                         echo SuporteController::suporteProduto($k['id']); 
-                    }
-                } else {
-                    echo SuporteController::suporteProduto($d['id']);
-                }
-            }
+                                            echo SuporteController::suporteProduto($d['ppid'],$k['id']);
+                                        }
+                                    } else {
+                                        echo SuporteController::suporteProduto($d['ppid'],$d['id']);
+                                    }
+                                }
                                 ?></tbody></table></td></tr><?
-                            }
-                            if (count($ped) == 0) {
-                                ?><table class='table'>
+            }
+            if (count($ped) == 0) {
+                ?><table class='table'>
                 <thead>
                     <tr>
                         <th>Id.</th>
@@ -109,7 +117,7 @@ if ($ident) {
                     <tr>
                         <td colspan='6'>Não há pedidos registrados no nome deste cliente</td>
                     </tr><?
-    }
-}
-                        ?>
+                }
+            }
+            ?>
         </tbody></table>

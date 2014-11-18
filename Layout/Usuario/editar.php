@@ -1,5 +1,16 @@
-<? Helper::js('App.Usuario'); ?>
-<h1>Editar usuário</h1>
+<?Helper::js('App.Usuario'); ?>
+<div class="sidebar left">
+    <div class="label btn-square usuarios">Usuários</div>
+</div>
+<style type="text/css">
+    @media screen and (max-width: 520px) {
+        .btn-square.usuarios:before {
+            content:'';
+        }
+    }
+</style>
+<div class="content">
+<div class="panel-default">
 <?
     global $db;
     $id = Request::get('ident');
@@ -67,13 +78,23 @@
   
     }
     FormHelper::startGroup();
-    FormHelper::submitAjax("Salvar","salvar/".$u['id'],array('class'=>'btn-primary'));
-    FormHelper::button("excluir","Excluir",array(
-        'class'=>'btn-danger',
+    if(
+            !$id && Session::hasPermission('usuario',Session::INSERIR) || 
+            Session::hasPermission('usuario',Session::EDITAR)
+    ) {
+        FormHelper::submitAjax("Salvar","salvar/".$u['id'],array('class'=>'button button-md'));
+    }
+    if($id && Session::hasPermission('usuario',Session::EXCLUIR)) {
+        FormHelper::button("excluir","Excluir",array(
+        'style'=>'margin-left:10px',
         'onclick'=>'App.Usuario.Excluir("'.$u["name"].'",'.$u['id'].")"
+        ));
+    }
+    FormHelper::button('cancelar',"Cancelar",array(
+        'style'=>'margin-left:10px',
+        'onclick'=>"location.href=\"/".APP_DIR."usuario\""
     ));
     FormHelper::endGroup();
-    
     FormHelper::end();
     
     ?>
@@ -84,3 +105,5 @@
             }));
         }
     </script>
+    
+</div></div>

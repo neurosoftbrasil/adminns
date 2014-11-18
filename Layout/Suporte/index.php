@@ -45,7 +45,7 @@ if($ident) {
     <div class="col-md-12">
     <div class="cliente_group">
         <label for="cliente"><strong>Cliente *</strong></label><br/>
-        <input id="cliente" class="inputTypeAhead" type="text" placeholder="Digite o nome do cliente, CNPJ ou CPF" value='<?= $ident?$res['cliente']:""; ?>'/>
+        <input id="cliente" class="inputTypeAhead" type="text" placeholder="Digite o nome do cliente, CNPJ ou CPF" value='<?= $ident?$res['cliente']:""; ?>' onfocus="$(this).select()"/>
         <input type='hidden' id="clienteId" name="clienteId" value=""/>
     </div>  
     <script type="text/javascript">
