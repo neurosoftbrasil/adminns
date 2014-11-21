@@ -13,7 +13,6 @@ $r = array(
     'custo'=>"",
     'valor'=>"",
 );
-
 if ($ident) {
     $r = "select * from suporte where id=" . $ident;
     $r = $db->query($r, true);
@@ -58,12 +57,19 @@ FormHelper::selectFromTable('suporte_status.id', 'descricao', 'Status', $r['supo
             'message'=>'Selecione um <strong>status</strong>.'
     )
 ));
+// 2014003841651
+// Em maos 
 if ($contato) {
-    $cont = $db->query("select nome from contato where id=" . $r['contato_id'], true);
+    $query = "select * from contato c,contato_email e,contato_telefone t where c.id=" . $r['contato_id']." and c.id = e.contato_id and t.contato_id = c.id";
+    $cont = $db->query($query, true);
     ?>
     <label>Cliente</label>
     <br/>
-    <?= $cont['nome'] ?>
+    <?
+        echo $cont['nome'];
+        echo $cont['email']!=""?"<br/><a href='mailto:".$cont['email']."'>".$cont['email']."</a>":"";
+        echo $cont['telefone']!=""?"<br/>".$cont['telefone']:"";
+    ?>
     <br/>
     <input type="hidden" name="contato_id" id="contato_id" value="<?= $r['contato_id']?>"/>
     <?

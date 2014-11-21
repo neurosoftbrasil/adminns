@@ -53,6 +53,7 @@ class SuporteController extends SecureController {
             $query .= "valor='" . Request::value('valor') . "',";
             $query .= "custo='" . Request::value('custo') . "' ";
             $query .= "where id=" . $ident;
+            $db->query($query);
         } else {
             $query = "insert into suporte (
                 produto_id,
@@ -114,6 +115,7 @@ class SuporteController extends SecureController {
                             datahora,custo,valor
                         from suporte where produto_pedido_id=" . $ppid . " and produto_id=" . $num;
         $qsuporte = $db->query($qsuporte);
+        
         $html = "";
         if (count($qsuporte) > 0) {
             ?><tr>

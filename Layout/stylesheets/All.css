@@ -51,7 +51,7 @@
         url('../font/glyphicons-halflings-regular.svg#svgFontName') format('svg'); /* Legacy iOS */
 }
 body {
-    background:#f3f3f3;
+    background:#f0f0f0;
     font:12px "raleway-regular";
     color:#333;
     padding:0 20px;
@@ -198,12 +198,14 @@ h1.half {
     border:0;
 }
 .loading {
-    display:inline-block;
-    margin:10px;
-    background:#f0f0f0 url('../images/loading.gif') no-repeat;
-    padding: 11px 16px 13px 45px;
-    border-radius:3px;
-    border:1px solid #ddd;
+    background: url("../images/loading.gif") no-repeat scroll 0 0 #f3f3f3;
+    display: inline-block;
+    height: 45px;
+    margin: 10px;
+    width: 45px;
+    left:50%;
+    position:relative;
+    margin-left:-25px;
 }
 .twitter-typeahead {
     width:100%;
@@ -305,7 +307,6 @@ body {
     background:#f3f3f3;
     font:12px "trebuchet";
     color:#333;
-    /*padding:20px;*/
 }
 .padding {
     padding: 10px 20px;

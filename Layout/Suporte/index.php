@@ -80,4 +80,5 @@ if($ident) {
     </div>
 </div>
 <div class="row" id="vendasProdutos">
+    <? if($ident) echo "<div class='loading'></div>";?>
 </div></div>

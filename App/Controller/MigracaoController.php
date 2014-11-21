@@ -4,21 +4,38 @@ class MigracaoController extends SecureController {
     public function produtos() {
         global $db;
         global $dbo;
-        $query = "select produto_id as codigo, descricoes_resumida as descricao, pacote_caixa as unidade, preco_real as preco, nome_nf as nome, name as nome_internacional,visivel,fabricante as fabricante_id,kit,rastreavel,tipo from produtos";
-        $prold = $dbo->query($query);
-        foreach ($prold as $p) {
-            $p['kit'] = $p['kit'] == "Não" ? "0" : "1";
-            $tipo = array(
+        $query = "select produto_id as id,produto_id as codigo, descricoes_resumida as descricao, pacote_caixa as unidade, preco_real as preco, nome_nf as nome, name as nome_internacional,visivel,fabricante as fabricante_id,kit,rastreavel,tipo from produtos";
+        $old_prods = $dbo->query($query);
+        $tipo = array(
                 'Produto' => 0,
                 'Servico' => 1,
                 'Curso' => 2
-            );
+        );
+
+        foreach($old_prods as $p) {
+            $query = "select * from produto where id=".$p['id'];
+            $new_prods = $db->query($query);
             $p['descricao'] = mysql_real_escape_string($p['descricao']);
             $p['tipo'] = $tipo[$p['tipo']];
-            $query = "insert into produto (codigo,descricao,unidade,preco,nome,nome_internacional,visivel,fabricante_id,kit,serial,tipo_id) values ('" . implode("','", $p) . "');";
-            $db->query($query);
-            //echo $query;
+            $p['kit'] = $p['kit'] == "Não" ? "0" : "1";
+
+            if(count($new_prods)==0) {
+                $query = "insert into produto (
+                    id,
+                    codigo,
+                    descricao, unidade, preco,
+                    nome,
+                    nome_internacional,
+                    visivel,
+                    fabricante_id,
+                    kit,
+                    rastreavel,
+                    tipo
+                ) values ('".implode("','",$p)."');";
+                $db->query($query);
+            }
         }
+        echo "<br/>".count($old_prods)."<br/>";
     }
 
     public function clientes() {
