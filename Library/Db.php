@@ -70,7 +70,9 @@ class DatabaseOld extends Database {
     
     public function __construct() {
         if(!$this->conn) {
-            $this->conn = new PDO("mysql:host=localhost;dbname=neurosoft;port=3306", 'root', '',array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+            $info = Config::dbo();
+            foreach($info as $key=>$value) $$key = $value;
+            $this->conn = new PDO("mysql:host=$host;dbname=$dbname;port=$port", $user, $passwd,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
         }
     }
     public function query($str,$unique = false,$format=PDO::FETCH_ASSOC) {
