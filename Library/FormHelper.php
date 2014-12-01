@@ -231,19 +231,10 @@ class FormHelper {
                 $('#<?= self::$formName ?>').attr('onsubmit', '<?= self::$formName ?>_Sender(event)');
                 function <?= self::$formName ?>_Sender(e) {
                     e.preventDefault();
-            <?
-            if (count(self::$validations) > 0) {
-                ?>
-                        var erros = [];
-                        /*
-             
-                    <?
-                     Util::prints(self::$validations);
-                    ?>
-             
-                    */
-                <?
-                foreach (self::$validations as $key => $value) {
+            <?  if (count(self::$validations) > 0) { ?>
+                    var erros = [];
+            
+            <? foreach (self::$validations as $key => $value) {
                     if ($value == "NotEmpty") {
                         ?>
                                 if ($.trim($('#<?= $key ?>').val()) == "") {

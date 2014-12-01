@@ -11,15 +11,17 @@ class MigracaoController extends SecureController {
                 'Servico' => 1,
                 'Curso' => 2
         );
-
+        $length = 0;
         foreach($old_prods as $p) {
             $query = "select * from produto where id=".$p['id'];
             $new_prods = $db->query($query);
-            $p['descricao'] = mysql_real_escape_string($p['descricao']);
-            $p['tipo'] = $tipo[$p['tipo']];
-            $p['kit'] = $p['kit'] == "Não" ? "0" : "1";
+            
 
             if(count($new_prods)==0) {
+                $p['descricao'] = mysql_real_escape_string($p['descricao']);
+                $p['tipo'] = $tipo[$p['tipo']];
+                $p['kit'] = $p['kit'] == "Não" ? "0" : "1";
+
                 $query = "insert into produto (
                     id,
                     codigo,
@@ -29,13 +31,15 @@ class MigracaoController extends SecureController {
                     visivel,
                     fabricante_id,
                     kit,
-                    rastreavel,
-                    tipo
+                    serial,
+                    tipo_id
                 ) values ('".implode("','",$p)."');";
                 $db->query($query);
+                echo $query;
+                $length++;
             }
         }
-        echo "<br/>".count($old_prods)."<br/>";
+        echo "<br/>".$length." produto(s) importado(s).<br/>";
     }
 
     public function clientes() {
@@ -43,6 +47,7 @@ class MigracaoController extends SecureController {
         global $dbo;
         $u = $db->query("select * from cliente");
         $clientes = $dbo->query('select cliente_id as id, nome, cpf as documento, 3 as module_id from clientes c order by id');
+
         foreach ($clientes as $c) {
             $id = $c['id'];
             if ($id > 0 && count($db->query("select id from cliente where id=" . $id)) == 0) {

@@ -28,7 +28,7 @@ class Helper {
             $number .= ",00";
         }
         $tmp = "";
-        if(count($num)>1) {
+        if(count($num)>=1) {
             $num = $num[0];
         }
         $counter = 0;

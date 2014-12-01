@@ -18,5 +18,9 @@ App.Suporte = {
             message: $('<div></div>').load(App.BasePath+'service/suporte/editar/'+suporte+'/?produto='+produto+'&contato='+contato),
             draggable: true
         });
+    },
+    NumSerie:function(obj) {
+        var value = $(obj).val().toLowerCase();
+        console.log(value);
     }
 }

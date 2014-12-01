@@ -97,8 +97,11 @@ if ($contato) {
         ?>
     </div>
 </div>
+<input type='hidden' value='0' id="finalizar" name='finalizar'/>
 <?
-FormHelper::textarea('observacao', 'Observação', '', array());
+if($ident && $r['finalizado']=="0" || !$ident) {
+    FormHelper::textarea('observacao', 'Observação', '', array());
+}
 $obs = array();
 if ($ident) {
     $obs = "select 
@@ -109,11 +112,32 @@ if ($ident) {
     $obs = $db->query($obs);
 }
     FormHelper::submitAjax('Salvar', 'salvar', array(
-    'class' => 'button',
-    'style' => 'margin:5px'
-));
-FormHelper::end();
+        'class' => 'button',
+        'style' => 'margin:5px'
+    ));
+    if($ident && $r['finalizado']=="0") {
+    ?><button 
+            type="button"
+            class ='button'
+            style='margin:5px 15px 5px 5px;float:right'
+            onclick="finalizaSuporte_Sender(event,1)">Finalizar</button>
+    <?
+    } else {
+    ?><button 
+            type="button"
+            class ='button'
+            style='margin:5px 15px 5px 5px;float:right'
+            onclick="finalizaSuporte_Sender(event,0)">Reabrir</button>
+    <?    
+    }
+    FormHelper::end();
 ?>
+<script type="text/javascript">
+    function finalizaSuporte_Sender(e,num) {
+        $("#finalizar").val(num);
+        formSuporte_Sender(e);
+    }
+</script>
 <table class="table">
     <thead>
         <tr>

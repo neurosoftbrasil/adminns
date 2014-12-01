@@ -4,6 +4,8 @@ global $dbo;
 
 $ident = Request::value('cliente');
 $pedido = Request::value('pedido');
+$produto = Request::value('produto');
+$item_id = Request::value('item_id');
 
 $ped = false;
 $html = "";
@@ -25,14 +27,26 @@ if ($ident) {
         $query .= " and pedido.id=" . $pedido;
     }
     $ped = $db->query($query);
-    $query = "select ped_id as id,pe.numero,pe.cliente_id, pe.total as valor, pe.status, pe.data, concat(e.num_nf,'/',e.serie_nf) as notafiscal ,e.data_emissao as notafiscaldata, 1 as dbold from pedido pe, entrada e where pe.status = 'FINALIZADO' and pe.numero = e.num_ped and pe.cliente_id=$ident ";
+    $query = "select ped_id as id,pe.numero,pe.cliente_id, pe.total as valor, pe.status, pe.data, concat(e.num_nf,'/',e.serie_nf) as notafiscal ,e.data_emissao as notafiscaldata, 1 as dbold from pedido pe, entrada e where pe.status = 'FINALIZADO' and pe.numero = e.num_ped and pe.cliente_id=$ident and e.vlr_ipi>0 and pe.cliente_id != 7424";
+
     if ($pedido) {
         $query .= " and pe.ped_id=" . $pedido;
     }
     $old = $dbo->query($query);
+
+    if(count($old)==0) {
+        $query = "select ped_id as id,pe.numero,pe.cliente_id, pe.total as valor, pe.status, pe.data, 1 as dbold from pedido pe where pe.cliente_id=$ident and pe.cliente_id != '7424'";
+        if ($pedido) {
+            $query .= " and pe.ped_id=" . $pedido;
+        }
+        $old = $dbo->query($query);
+        if(count($old)>0) {
+            $old[0]['notafiscal'] = "Sem nota";
+            $old[0]['notafiscaldata'] = "0000-00-00";
+        }
+    }
     $ped = array_merge($ped,$old);
     $produtos = array();
-
     foreach ($ped as $p) {
         $newdb = $p['dbold']=="0";
         ?><table class='table'>
@@ -55,14 +69,16 @@ if ($ident) {
                         $nf = array('ent_id'=>0);
                         if(!$newdb) {
                             $nf = $dbo->query("select * from entrada where num_nf=".$p['notafiscal']);
-                            $nf = $nf[0];
+                            if(count($nf)>0) $nf = $nf[0];
                         }
                     ?>
-                    <td><a href="http://www.neurosoft.com.br/admns/print_entrada_visualizacao.php?ent_id=<?=$nf['ent_id']?>" target="_blank"><?= $p['notafiscal'];?></a></td>
+                    <td><? if(isset($p['notafiscal']) && $p['notafiscal'] != "Sem nota") {?><a href="http://www.neurosoft.com.br/admns/print_entrada_visualizacao.php?ent_id=<?=$nf['ent_id']?>" target="_blank"><?}?><?= $p['notafiscal'];?><?if($p['notafiscal'] != "Sem nota"){?></a><?}?></td>
                     <td class='mobile-half'><?= Helper::timestampToDate($p['notafiscaldata']) ?></td>
                     <td class='mobile-min'><?= Helper::formatValor($p['valor']) ?></td>
                 </tr>
-                <tr><td colspan='6'><table class='table inside' style='background:#f3f3f3'>
+                <tr>
+                    <td colspan='6'>
+                        <table class='table inside' style='background:#f3f3f3'>
                             <thead>
                                 <tr>
                                     <th style='width:50%'>Produto</th>
@@ -70,7 +86,8 @@ if ($ident) {
                                     <th class='mobile-half'>Fabricante</th>
                                     <th></th>
                                 </tr>
-                            </thead><tbody>
+                            </thead>
+                            <tbody>
                                 <?
                                 if($newdb) {
                                     $qprod = "select 
@@ -86,11 +103,11 @@ if ($ident) {
                                     where pp.pedido_id=" . $p['id'] . " and p.id = pp.produto_id";
                                     $prods = $db->query($qprod);
                                 } else {
-                                    $qprod = "select i.ip_id as ppid,p.produto_id as id,kit,nome,'' as garantia,(select fab_descri from fabricantes f where p.fabricante = f.fab_id) as fabricante from pedido_item i,produtos p where ip_ped_id=".$p['id']." and ip_produto_id = p.produto_id";
+                                    $qprod = "select *, i.ip_id as ppid,p.produto_id as id,kit,nome,'' as garantia,(select fab_descri from fabricantes f where p.fabricante = f.fab_id) as fabricante from pedido_item i,produtos p where ip_ped_id=".$p['id']." and ip_produto_id = p.produto_id";
+                                    if($produto) $qprod .= " and produto_id=".$produto." and ip_id = ".$item_id;
                                     $prods = $dbo->query($qprod);
                                 }
-                                foreach ($prods as $d) {
-                                    ?>
+                                foreach ($prods as $d) {?>
                                     <tr>
                                         <td><?= $d['nome']?></td>
                                         <td style='width:20%' class='mobile-min'><?= ($d['garantia'] != "" ? $d['garantia'] : "Sem informação") ?></td>
@@ -120,10 +137,17 @@ if ($ident) {
                                         echo SuporteController::suporteProduto($d['ppid'],$d['id']);
                                     }
                                 }
-                                ?></tbody></table></td></tr><?
+                                ?>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+            </table><?
             }
             if (count($ped) == 0) {
-                ?><table class='table'>
+                ?>
+            <table class='table'>
                 <thead>
                     <tr>
                         <th>Id.</th>
@@ -143,6 +167,6 @@ if ($ident) {
             ?>
         </tbody>
     </table>
-<? if($pedido) { ?>
+<? if($pedido && !(Request::value('semvolta'))) { ?>
     <a href="/<?=APP_DIR?>suporte/index/<?=$ident?>" class="button button-md">Voltar à lista</a>
 <? }
